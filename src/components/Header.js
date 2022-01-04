@@ -33,16 +33,16 @@ export default function Header() {
             <Toolbar>
                 <Grid container
                     alignItems="center">
-                    <Grid item>
+                    {/* <Grid item>
                         <InputBase
                             placeholder="Search topics"
                             className={classes.searchInput}
                             startAdornment={<SearchIcon fontSize="small" />}
                         />
-                    </Grid>
+                    </Grid> */}
                     <Grid item sm></Grid>
                     <Grid item>
-                        <IconButton>
+                        {/* <IconButton>
                             <Badge badgeContent={4} color="secondary">
                                 <NotificationsNoneIcon fontSize="small" />
                             </Badge>
@@ -51,7 +51,7 @@ export default function Header() {
                             <Badge badgeContent={3} color="primary">
                                 <ChatBubbleOutlineIcon fontSize="small" />
                             </Badge>
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton>
                             <PowerSettingsNewIcon fontSize="small" />
                         </IconButton>
