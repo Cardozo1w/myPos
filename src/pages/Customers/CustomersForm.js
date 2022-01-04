@@ -22,24 +22,14 @@ const initialFValues = {
 export default function CustomersForm(props) {
   const { addOrEdit, recordForEdit } = props;
 
-  const validate = (fieldValues = values) => {
+   const validate = (fieldValues = values) => {
     let temp = { ...errors };
     if ("idCliente" in fieldValues)
       temp.idCliente = fieldValues.idCliente ? "" : "Este campo es requerido";
-    if ("correo" in fieldValues)
-      temp.descripcion = fieldValues.descripcion
-        ? ""
-        : "Este campo es requerido";
-    if ("precio" in fieldValues)
-      temp.precio = fieldValues.precio ? "" : "Este campo es requerido";
-    if ("unidad" in fieldValues)
-      temp.unidad = fieldValues.unidad ? "" : "Este campo es requerido";
-    if ("claveUnidad" in fieldValues)
-      temp.claveUnidad = fieldValues.claveUnidad
-        ? ""
-        : "Este campo es requerido";
-    if ("claveSat" in fieldValues)
-      temp.claveSat = fieldValues.claveSat ? "" : "Este campo es requerido";
+   if ("correo" in fieldValues)
+      temp.correo = fieldValues.correo ? "" : "Este campo es requerido";
+      if ("codigoPostal" in fieldValues)
+      temp.codigoPostal = fieldValues.codigoPostal ? "" : "Este campo es requerido";
 
     setErrors({
       ...temp,
@@ -47,7 +37,6 @@ export default function CustomersForm(props) {
 
     if (fieldValues == values) return Object.values(temp).every((x) => x == "");
   };
-
   const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
     useForm(initialFValues, true, validate);
 
@@ -58,7 +47,7 @@ export default function CustomersForm(props) {
 
       try {
         await axios.put(
-          `http://localhost:4000/api/${values.idProducto}`,
+          `http://localhost:4000/api/clientes/${values.idCliente}`,
           values
         );
 
@@ -83,7 +72,7 @@ export default function CustomersForm(props) {
         <Grid item xs={6}>
           <Controls.Input
             disabled={true}
-            name="idProducto"
+            name="idCliente"
             label="RFC"
             value={values.idCliente}
             onChange={handleInputChange}
@@ -110,13 +99,7 @@ export default function CustomersForm(props) {
             onChange={handleInputChange}
             error={errors.codigoPostal}
           />
-          <Controls.Input
-            label="Colonia"
-            name="colonia"
-            value={values.colonia}
-            error={errors.colonia}
-            onChange={handleInputChange}
-          />
+  
           <Controls.Input
             label="Estado"
             name="estado"

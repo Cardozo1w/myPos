@@ -110,7 +110,7 @@ router.post("/like/clientes", async (req, res) => {
 });
 
 //CREA UN NUEVO CLIENTE
-router.post("/", async (req, res) => {
+router.post("/nuevocliente", async (req, res) => {
   try {
     const clientes = await Customer.create(req.body);
 
@@ -123,14 +123,12 @@ router.post("/", async (req, res) => {
 //MODIFICA UN CLIENTE EXISTENTE
 router.put("/clientes/:idCliente", async (req, res) => {
   try {
-    await Customer.update(req.body, {
+    const cliente = await Customer.update(req.body, {
       where: {
         idCliente: req.params.idCliente,
       },
     });
-    res.json({
-      success: `Cliente ${req.params.idCliente} modificado exitosamente`,
-    });
+    res.json({mensaje: `Registro ${req.params.idCliente} modificado exitosmente`});
   } catch (error) {
     res.json({ error: "Error al actualizar el cliente" });
   }

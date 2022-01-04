@@ -27,7 +27,7 @@ import Popup from "../../components/Popup";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
-import AgregarProducto from "./AgregarCliente";
+import AgregarCliente from "./AgregarCliente";
 import Swal from "sweetalert2";
 
 const useStyles = makeStyles((theme) => ({
@@ -219,7 +219,7 @@ export default function Customers() {
         </div>
       </Paper>
       <Popup
-        title="Modificar Producto"
+        title="Modificar Cliente"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
@@ -232,11 +232,11 @@ export default function Customers() {
       </Popup>
 
       <Popup
-        title="Agregar Producto"
+        title="Agregar Cliente"
         openPopup={agregarForm}
         setOpenPopup={setAgregarForm}
       >
-        <AgregarProducto
+        <AgregarCliente
           setRefresh={setRefresh}
           setAgregarForm={setAgregarForm}
         />

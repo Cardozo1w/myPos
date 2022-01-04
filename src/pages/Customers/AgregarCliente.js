@@ -5,34 +5,31 @@ import { useForm, Form } from "../../components/useForm";
 import * as employeeService from "../../services/employeeService";
 import axios from "axios";
 
+
 const initialFValues = {
-  idProducto: "",
-  descripcion: "",
-  precio: "",
-  unidad: "PZA",
-  claveUnidad: "",
-  claveSat: "",
+  idCliente: "",
+  nombre: "",
+  correo: "",
+  calle: "",
+  nuext: "",
+  colonia: "",
+  codigoPostal: "",
+  localidad: "",
+  municipio: "",
+  estado: "",
+  pais: "",
 };
 
+
 export default function AgregarCliente(props) {
-  const validate = (fieldValues = values) => {
+ const validate = (fieldValues = values) => {
     let temp = { ...errors };
-    if ("idProducto" in fieldValues)
-      temp.idProducto = fieldValues.idProducto ? "" : "Este campo es requerido";
-    if ("descripcion" in fieldValues)
-      temp.descripcion = fieldValues.descripcion
-        ? ""
-        : "Este campo es requerido";
-    if ("precio" in fieldValues)
-      temp.precio = fieldValues.precio ? "" : "Este campo es requerido";
-    if ("unidad" in fieldValues)
-      temp.unidad = fieldValues.unidad ? "" : "Este campo es requerido";
-    if ("claveUnidad" in fieldValues)
-      temp.claveUnidad = fieldValues.claveUnidad
-        ? ""
-        : "Este campo es requerido";
-    if ("claveSat" in fieldValues)
-      temp.claveSat = fieldValues.claveSat ? "" : "Este campo es requerido";
+    if ("idCliente" in fieldValues)
+      temp.idCliente = fieldValues.idCliente ? "" : "Este campo es requerido";
+   if ("correo" in fieldValues)
+      temp.correo = fieldValues.correo ? "" : "Este campo es requerido";
+      if ("codigoPostal" in fieldValues)
+      temp.codigoPostal = fieldValues.codigoPostal ? "" : "Este campo es requerido";
 
     setErrors({
       ...temp,
@@ -46,9 +43,11 @@ export default function AgregarCliente(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('No paso validacion')
     if (validate()) {
+      console.log('Paso Validacion')
       try {
-        await axios.post("http://localhost:4000/api/", values);
+        await axios.post("http://localhost:4000/api/nuevocliente", values);
         props.setRefresh(true);
         props.setAgregarForm(false);
       } catch (error) {
@@ -62,47 +61,76 @@ export default function AgregarCliente(props) {
       <Grid container>
         <Grid item xs={6}>
           <Controls.Input
-            name="idProducto"
-            label="Clave"
-            value={values.idProducto}
+            name="idCliente"
+            label="RFC"
             onChange={handleInputChange}
-            error={errors.idProducto}
+            error={errors.idCliente}
           />
           <Controls.Input
-            name="descripcion"
-            label="Descripcion del Producto"
-            value={values.descripcion}
+            name="nombre"
+            label="Nombre Completo"
+           
             onChange={handleInputChange}
-            error={errors.descripcion}
+            error={errors.nombre}
           />
           <Controls.Input
-            label="Precio"
-            name="precio"
-            value={values.precio}
+            label="Correo Electronico"
+            name="correo"
+           
             onChange={handleInputChange}
-            error={errors.precio}
+            error={errors.correo}
           />
           <Controls.Input
-            label="Unidad"
-            name="unidad"
-            value={values.unidad}
+            label="Codigo Postal"
+
+            name="codigoPostal"
+           
             onChange={handleInputChange}
-            error={errors.unidad}
+            error={errors.codigoPostal}
+          />
+         
+          <Controls.Input
+            label="Estado"
+            name="estado"
+           
+            error={errors.estado}
+            onChange={handleInputChange}
+          />
+          <Controls.Input
+            label="Pais"
+            name="pais"
+           
+            error={errors.pais}
+            onChange={handleInputChange}
           />
         </Grid>
         <Grid item xs={6}>
           <Controls.Input
-            label="Clave de Medida SAT"
-            name="claveUnidad"
-            value={values.claveUnidad}
-            error={errors.claveUnidad}
+            label="Numero exterior"
+            name="nuext"
+           
+            error={errors.nuext}
             onChange={handleInputChange}
           />
           <Controls.Input
-            label="Clave SAT"
-            name="claveSat"
-            value={values.claveSat}
-            error={errors.claveSat}
+            label="Colonia"
+            name="colonia"
+           
+            error={errors.colonia}
+            onChange={handleInputChange}
+          />
+          <Controls.Input
+            label="Localidad"
+            name="localidad"
+           
+            error={errors.localidad}
+            onChange={handleInputChange}
+          />
+          <Controls.Input
+            label="Municipio"
+            name="municipio"
+           
+            error={errors.municipio}
             onChange={handleInputChange}
           />
 
