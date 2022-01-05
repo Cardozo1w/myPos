@@ -193,4 +193,19 @@ router.post("/cotizacion/insertar", async (req, res) => {
   }
 });
 
+//OBTIENE UNA COTIZACION POR FOLIO
+router.get('/cotizacion/:folio', async (req, res) => {
+   const cliente = await sequelize.query(
+        `select * from quotes INNER JOIN Customers on quotes.idCliente = Customers.idCliente where quotes.folio = ${req.params.folio}`
+      );
+
+      const productos = await sequelize.query(
+        `SELECT * from detalleCotizacion INNER JOIN products on detalleCotizacion.idProducto =  products.idProducto where detalleCotizacion.folioCotizacion = ${req.params.folio};
+`
+      );
+
+      res.json({cliente, productos});
+
+})
+
 module.exports = router;

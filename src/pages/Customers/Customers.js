@@ -205,12 +205,12 @@ export default function Customers() {
                   >
                     <EditOutlinedIcon fontSize="small" />
                   </Controls.ActionButton>
-                  <Controls.ActionButton color="secondary">
+                  {/* <Controls.ActionButton color="secondary">
                     <CloseIcon
                       fontSize="small"
                       onClick={() => deleteItem(item.idCliente)}
                     />
-                  </Controls.ActionButton>
+                  </Controls.ActionButton> */}
                 </TableCell>
               </TableRow>
             ))}

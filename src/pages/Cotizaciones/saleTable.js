@@ -51,6 +51,7 @@ const headCells = [
   { id: "precio", label: "Precio" },
   { id: "cantidad", label: "Cantidad" },
   { id: "total", label: "Total" },
+  {id:'acciones', label: "Acciones"}
 ];
 
 export default function SaleTable({ productosVenta, setProductosVenta }) {
@@ -116,21 +117,10 @@ export default function SaleTable({ productosVenta, setProductosVenta }) {
     setOrderBy(cellId);
   };
 
-  const deleteItem = async (deleteId) => {
-    Swal.fire({
-      title: "¿Estás seguro de querer eliminar este registro?",
-      text: "La acción no se puede revertir",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Si, eliminar",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await axios.delete(`http://localhost:4000/api/${deleteId}`);
-        setRefresh(true);
-      }
-    });
+  const deleteItem = async (idProducto) => {
+   console.log(idProducto);
+   let deleteProduct = productosVenta.filter(producto=> producto.idProducto !== idProducto)
+   setProductosVenta(deleteProduct);
   };
 
   const cantidadChange = (e, item) => {
@@ -204,6 +194,14 @@ export default function SaleTable({ productosVenta, setProductosVenta }) {
               </TableCell>
               <TableCell>
                 $ {(item.precio * item.cantidad).toFixed(2)}
+              </TableCell>
+              <TableCell>
+               <Controls.ActionButton color="secondary">
+                      <CloseIcon
+                        fontSize="small"
+                        onClick={() => deleteItem(item.idProducto)}
+                      />
+                    </Controls.ActionButton>
               </TableCell>
             </TableRow>
           ))}

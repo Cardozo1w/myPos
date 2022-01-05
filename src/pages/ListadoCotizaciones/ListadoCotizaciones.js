@@ -7,7 +7,7 @@ import {
   TablePagination,
   TableSortLabel,
 } from "@material-ui/core";
-
+import { PDFViewer } from "@react-pdf/renderer";
 import PageHeader from "../../components/PageHeader";
 import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
 import {
@@ -28,6 +28,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
+import Cotizacionpdf from '../../components/pdf/cotizacion'
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -45,9 +46,9 @@ const useStyles = makeStyles((theme) => ({
 
 const headCells = [
   { id: "id", label: "Folio" },
-  { id: "desc", label: "Cliente" },
-  { id: "precio", label: "Fecha" },
-  { id: "claveSat", label: "Total" },
+  { id: "cliente", label: "Cliente" },
+  { id: "fecha", label: "Fecha" },
+  { id: "total", label: "Total" },
 ];
 
 export default function ListadoCotizaciones() {
@@ -110,6 +111,31 @@ export default function ListadoCotizaciones() {
     setOrderBy(cellId);
   };
 
+const [clienteCotizacion, setCliente] = useState({
+    idCliente: "",
+    nombre: "",
+});
+const [productosCotizacion, setProductos] = useState([])
+const [folio, setFolio] = useState(null)
+const [total, setTotal] = useState(0)
+
+  const obtenerCotizacion = async (folioCotizacion, totalCotizacion) => {
+
+const {data} = await axios.get(`http://localhost:4000/api/cotizacion/${folioCotizacion}`);
+let cliente = data.cliente[0];
+cliente = cliente[0]
+setFolio(folioCotizacion)
+setTotal(totalCotizacion)
+if(cliente !== undefined){
+  setCliente(cliente)
+}
+setProductos(data.productos[0]);
+setOpenPopup(true)
+
+
+
+  }
+
   return (
     <>
       <PageHeader
@@ -169,17 +195,37 @@ export default function ListadoCotizaciones() {
             </TableHead>
             <TableBody>
               {cotizaciones.map((item) => (
-                <TableRow key={item.folio}>
+                <TableRow key={item.folio} onClick={()=>obtenerCotizacion(item.folio, item.total)}>
                   <TableCell>{item.folio}</TableCell>
                   <TableCell>{item.idCliente}</TableCell>
-                  <TableCell>{item.fecha}</TableCell>
-                  <TableCell>$ {item.total}</TableCell>
+                  <TableCell>{item.fecha.substring(0,10)}</TableCell>
+                  <TableCell>$ {item.total.toFixed(2)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </TblContainer>
         </div>
       </Paper>
+
+
+       <Popup
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        title="Cotizacion"
+      >
+        {productosCotizacion ? (
+          <>
+            <PDFViewer style={{ width: "800px", height: "90vh" }}>
+              <Cotizacionpdf
+                customer={clienteCotizacion}
+                productos={productosCotizacion}
+                total={total}
+                folio={folio}
+              />
+            </PDFViewer>
+          </>
+        ) : null}
+      </Popup>
     </>
   );
 }

@@ -203,12 +203,12 @@ export default function Products() {
                     >
                       <EditOutlinedIcon fontSize="small" />
                     </Controls.ActionButton>
-                    <Controls.ActionButton color="secondary">
+                    {/* <Controls.ActionButton color="secondary">
                       <CloseIcon
                         fontSize="small"
                         onClick={() => deleteItem(item.idProducto)}
                       />
-                    </Controls.ActionButton>
+                    </Controls.ActionButton> */}
                   </TableCell>
                 </TableRow>
               ))}
