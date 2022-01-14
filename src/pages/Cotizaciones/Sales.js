@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   searchInput: {
-    width: "80%",
+    width: "70%",
   },
   newButton: {
     position: "absolute",
@@ -89,7 +89,6 @@ export default function Sales() {
     );
 
     setFolio(data.folio);
-    console.log(data.folio);
     setAbrirCotizacion(true);
   };
 
@@ -187,7 +186,7 @@ export default function Sales() {
         <Customers setOpenPopup={setOpenPopup} setCliente={setCliente} />
       </Popup>
       <Popup
-        title="Buscar Cliente"
+        title="Buscar Producto"
         openPopup={openProducts}
         setOpenPopup={setOpenProducts}
       >

@@ -43,12 +43,7 @@ const theme = createMuiTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Main} />
-          <Route exact path="/cotizacion" component={Cotizacionpdf} />
-        </Switch>
-      </Router>
+     <Main />
     </ThemeProvider>
     // <Cotizacionpdf />
   );

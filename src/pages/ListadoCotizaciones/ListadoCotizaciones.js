@@ -86,16 +86,16 @@ export default function ListadoCotizaciones() {
   );
 
   const handleSearch = async (e) => {
-    let target = e.target.value;
-    if (target === "") {
-      setRefresh(true);
-    } else {
-      console.log(target);
-      const { data } = await axios.post("http://localhost:4000/api/like/", {
-        target: target,
-      });
-      setCotizaciones(data);
-    }
+    // let target = e.target.value;
+    // if (target === "") {
+    //   setRefresh(true);
+    // } else {
+    //   console.log(target);
+    //   const { data } = await axios.post("http://localhost:4000/api/like/", {
+    //     target: target,
+    //   });
+    //   setCotizaciones(data);
+    // }
   };
 
   const addOrEdit = (employee, resetForm) => {};
@@ -135,6 +135,8 @@ setOpenPopup(true)
 
 
   }
+
+  console.log(cotizaciones);
 
   return (
     <>

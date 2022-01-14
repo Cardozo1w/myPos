@@ -77,13 +77,14 @@ const CotizacionPdf = ({ customer, productos, total, folio }) => {
               fontWeight: 700,
               fontSize: "25px",
               padding: "7px 0",
+              fontStyle: "italic"
             }}
           >
             FERRETERIA RUIZ
           </Text>
           <View
             style={{
-              fontSize: "16px",
+              fontSize: "12px",
               textAlign: "center",
               display: "flex",
               flexDirection: "row",
@@ -96,7 +97,7 @@ const CotizacionPdf = ({ customer, productos, total, folio }) => {
           </View>
           <View
             style={{
-              fontSize: "16px",
+              fontSize: "12px",
               textAlign: "center",
               display: "flex",
               flexDirection: "row",
@@ -112,7 +113,7 @@ const CotizacionPdf = ({ customer, productos, total, folio }) => {
           <View
             style={{
               marginBottom: "20px",
-              fontSize: "16px",
+              fontSize: "12px",
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
@@ -128,7 +129,7 @@ const CotizacionPdf = ({ customer, productos, total, folio }) => {
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  fontSize: "12px",
+                  fontSize: "9px",
                   justifyContent: "space-between",
                   marginBottom: "20px",
                 }}
@@ -175,7 +176,7 @@ const CotizacionPdf = ({ customer, productos, total, folio }) => {
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "space-between",
-                fontSize: "16px",
+                fontSize: "13px",
                 borderTop: "2px solid #000",
                 borderBottom: "2px solid #000",
                 padding: "5px 0",
@@ -192,7 +193,7 @@ const CotizacionPdf = ({ customer, productos, total, folio }) => {
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  fontSize: "14px",
+                  fontSize: "9px",
                   justifyContent: "space-between",
                   marginTop: "5px",
                 }}
@@ -208,8 +209,8 @@ const CotizacionPdf = ({ customer, productos, total, folio }) => {
             ))}
           </View>
 
-          <Text style={{ textAlign: "right", marginTop: "15px" }}>
-            TOTAL: ${total}
+          <Text style={{ textAlign: "right", marginTop: "15px", fontSize: "14px" }}>
+            TOTAL: ${total.toFixed(2)}
           </Text>
         </View>
       </Page>
