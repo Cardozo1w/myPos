@@ -28,7 +28,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
-import Cotizacionpdf from '../../components/pdf/cotizacion'
+import Cotizacionpdf from '../../components/pdf/cotizacionLista'
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {

@@ -3,16 +3,7 @@ import { Document, Page, Text, View, Image } from "@react-pdf/renderer";
 import membrete from "../../img/membrete.jpg";
 import cotimg from "../../img/cot.jpg";
 
-const CotizacionPdf = ({
-  customer,
-  productos,
-  total,
-  folio,
-  setFolio,
-  setTotal,
-  setCliente,
-  setProductosVenta,
-}) => {
+const CotizacionLista = ({ customer, productos, total, folio }) => {
   const [cliente, setClienteCotizacion] = useState({
     nombre: "",
     idCliente: "",
@@ -26,31 +17,20 @@ const CotizacionPdf = ({
     const llenarDatos = () => {
       if (customer.idCliente !== "") {
         setClienteCotizacion(customer);
-        setCliente({
-          nombre: "",
-          idCliente: "",
-        });
       }
       setProductosCotizacion(productos);
       setTotalCotizacion(total);
       setFolioCotizacion(folio);
-      setFolio(null);
-
-      setTotal(0);
-     
-      setProductosVenta([]);
     };
 
     llenarDatos();
   }, []);
 
   const nombreOracion = () => {
-   let nombre = cliente.nombre.toLowerCase();
-   nombre = nombre.replace(/\b\w/g, (l) => l.toUpperCase());
-   return nombre;
-
+    let nombre = cliente.nombre.toLowerCase();
+    nombre = nombre.replace(/\b\w/g, (l) => l.toUpperCase());
+    return nombre;
   };
-
 
   const meses = [
     "Enero",
@@ -167,16 +147,23 @@ const CotizacionPdf = ({
           </View>
 
           <Text
-            style={{ textAlign: "right", marginTop: "15px", fontSize: "14px", marginBottom: '20px' }}
+            style={{
+              textAlign: "right",
+              marginTop: "15px",
+              fontSize: "14px",
+              marginBottom: "20px",
+            }}
           >
             TOTAL: ${totalCotizacion.toFixed(2)}
           </Text>
 
-          <Text style={{fontSize: '10px'}}>PRECIOS SUJETOS A CAMBIO SIN PREVIO AVISO</Text>
+          <Text style={{ fontSize: "10px" }}>
+            PRECIOS SUJETOS A CAMBIO SIN PREVIO AVISO
+          </Text>
         </View>
       </Page>
     </Document>
   );
 };
 
-export default CotizacionPdf;
+export default CotizacionLista;
