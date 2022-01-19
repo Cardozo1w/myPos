@@ -28,7 +28,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
-import Cotizacionpdf from '../../components/pdf/cotizacionLista'
+import Cotizacionpdf from "../../components/pdf/cotizacionLista";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -111,32 +111,35 @@ export default function ListadoCotizaciones() {
     setOrderBy(cellId);
   };
 
-const [clienteCotizacion, setCliente] = useState({
+  const [clienteCotizacion, setCliente] = useState({
     idCliente: "",
     nombre: "",
-});
-const [productosCotizacion, setProductos] = useState([])
-const [folio, setFolio] = useState(null)
-const [total, setTotal] = useState(0)
+  });
+  const [productosCotizacion, setProductos] = useState([]);
+  const [folio, setFolio] = useState(null);
+  const [total, setTotal] = useState(0);
+  const [fecha, setFecha] = useState(null);
 
-  const obtenerCotizacion = async (folioCotizacion, totalCotizacion) => {
+  const obtenerCotizacion = async (
+    folioCotizacion,
+    totalCotizacion,
+    fechaCotizacion
+  ) => {
+    const { data } = await axios.get(
+      `http://localhost:4000/api/cotizacion/${folioCotizacion}`
+    );
+    let cliente = data.cliente[0];
+    cliente = cliente[0];
+    setFolio(folioCotizacion);
+    setTotal(totalCotizacion);
+    setFecha(fechaCotizacion);
 
-const {data} = await axios.get(`http://localhost:4000/api/cotizacion/${folioCotizacion}`);
-let cliente = data.cliente[0];
-cliente = cliente[0]
-setFolio(folioCotizacion)
-setTotal(totalCotizacion)
-if(cliente !== undefined){
-  setCliente(cliente)
-}
-setProductos(data.productos[0]);
-setOpenPopup(true)
-
-
-
-  }
-
-  console.log(cotizaciones);
+    if (cliente !== undefined) {
+      setCliente(cliente);
+    }
+    setProductos(data.productos[0]);
+    setOpenPopup(true);
+  };
 
   return (
     <>
@@ -197,10 +200,15 @@ setOpenPopup(true)
             </TableHead>
             <TableBody>
               {cotizaciones.map((item) => (
-                <TableRow key={item.folio} onClick={()=>obtenerCotizacion(item.folio, item.total)}>
+                <TableRow
+                  key={item.folio}
+                  onClick={() =>
+                    obtenerCotizacion(item.folio, item.total, item.fecha)
+                  }
+                >
                   <TableCell>{item.folio}</TableCell>
                   <TableCell>{item.idCliente}</TableCell>
-                  <TableCell>{item.fecha.substring(0,10)}</TableCell>
+                  <TableCell>{item.fecha.substring(0, 10)}</TableCell>
                   <TableCell>$ {item.total.toFixed(2)}</TableCell>
                 </TableRow>
               ))}
@@ -209,8 +217,7 @@ setOpenPopup(true)
         </div>
       </Paper>
 
-
-       <Popup
+      <Popup
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
         title="Cotizacion"
@@ -223,6 +230,7 @@ setOpenPopup(true)
                 productos={productosCotizacion}
                 total={total}
                 folio={folio}
+                fecha={fecha}
               />
             </PDFViewer>
           </>

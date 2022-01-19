@@ -3,7 +3,7 @@ import { Document, Page, Text, View, Image } from "@react-pdf/renderer";
 import membrete from "../../img/membrete.jpg";
 import cotimg from "../../img/cot.jpg";
 
-const CotizacionLista = ({ customer, productos, total, folio }) => {
+const CotizacionLista = ({ customer, productos, total, folio, fecha }) => {
   const [cliente, setClienteCotizacion] = useState({
     nombre: "",
     idCliente: "",
@@ -57,8 +57,8 @@ const CotizacionLista = ({ customer, productos, total, folio }) => {
     "Sábado",
   ];
   // Creamos el objeto fecha instanciándolo con la clase Date
-  const fecha = new Date();
-  // Construimos el formato de salida
+  //const fecha = new Date();
+  var fecha = new Date(fecha);
   const hoy =
     dias_semana[fecha.getDay()] +
     ", " +
@@ -66,7 +66,10 @@ const CotizacionLista = ({ customer, productos, total, folio }) => {
     " de " +
     meses[fecha.getMonth()] +
     " de " +
-    fecha.getUTCFullYear();
+   fecha.getUTCFullYear();
+
+
+
 
   return (
     <Document title={`cotizacion no. ${folioCotizacion}`}>
@@ -112,18 +115,17 @@ const CotizacionLista = ({ customer, productos, total, folio }) => {
               style={{
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "space-between",
-                fontSize: "13px",
+                fontSize: "12px",
                 borderTop: "2px solid #000",
                 borderBottom: "2px solid #000",
                 padding: "5px 0",
               }}
             >
-              <Text>Codigo</Text>
-              <Text>Descripcion</Text>
-              <Text>Precio</Text>
-              <Text>Cantidad</Text>
-              <Text>Total</Text>
+              <Text style={{flexBasis: '10%'}}>Codigo</Text>
+              <Text style={{flexBasis: '45%'}}>Descripcion</Text>
+              <Text style={{flexBasis: '15%', textAlign: 'center'}}>Precio</Text>
+              <Text style={{flexBasis: '15%'}}>Cantidad</Text>
+              <Text style={{flexBasis: '15%'}}>Total</Text>
             </View>
             {productosCotizacion.map((producto) => (
               <View
@@ -131,15 +133,14 @@ const CotizacionLista = ({ customer, productos, total, folio }) => {
                   display: "flex",
                   flexDirection: "row",
                   fontSize: "9px",
-                  justifyContent: "space-between",
                   marginTop: "5px",
                 }}
               >
-                <Text>{producto.idProducto}</Text>
-                <Text>{producto.descripcion.substring(0, 20)}</Text>
-                <Text>$ {producto.precio.toFixed(2)}</Text>
-                <Text>{producto.cantidad}</Text>
-                <Text>
+                <Text style={{flexBasis: '10%'}}>{producto.idProducto}</Text>
+                <Text style={{flexBasis: '45%'}}>{producto.descripcion}</Text>
+                <Text style={{flexBasis: '15%', paddingLeft: '15px'}}>$ {producto.precio.toFixed(2)}</Text>
+                <Text style={{flexBasis: '15%', paddingLeft: '25px'}}>{producto.cantidad}</Text>
+                <Text style={{flexBasis: '15%'}}>
                   $ {(producto.precio * producto.cantidad).toFixed(2)}
                 </Text>
               </View>
