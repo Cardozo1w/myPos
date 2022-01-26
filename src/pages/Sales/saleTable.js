@@ -1,35 +1,17 @@
 import React, { useState } from "react";
 import {
-  Table,
   TableHead,
   TableRow,
   TableCell,
-  TablePagination,
   TableSortLabel,
 } from "@material-ui/core";
-import productosjson from "../../pages/Products/productos.json";
 
-import PageHeader from "../../components/PageHeader";
-import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
-import {
-  Paper,
-  makeStyles,
-  TableBody,
-  Toolbar,
-  InputAdornment,
-} from "@material-ui/core";
+import { makeStyles, TableBody } from "@material-ui/core";
 import useTable from "../../components/useTable";
-//import * as employeeService from "../../services/employeeService";
 import Controls from "../../components/controls/Controls";
-import { Search } from "@material-ui/icons";
-import AddIcon from "@material-ui/icons/Add";
-import Popup from "../../components/Popup";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
-import { useEffect } from "react";
 import Swal from "sweetalert2";
-import { useForm, Form } from "../../components/useForm";
+import { useForm } from "../../components/useForm";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -54,12 +36,10 @@ const headCells = [
 ];
 
 export default function SaleTable({ productosVenta, setProductosVenta }) {
-  const [agregarForm, setAgregarForm] = useState(false);
   const [productos, setProductos] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const pages = [5, 10, 25];
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
   const classes = useStyles();

@@ -1,12 +1,4 @@
 import React, { useState } from "react";
-import {
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TablePagination,
-  TableSortLabel,
-} from "@material-ui/core";
 import Customers from "./Customers";
 
 import PageHeader from "../../components/PageHeader";
@@ -14,21 +6,14 @@ import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
 import {
   Paper,
   makeStyles,
-  TableBody,
   Toolbar,
   InputAdornment,
 } from "@material-ui/core";
-import useTable from "../../components/useTable";
 //import * as employeeService from "../../services/employeeService";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
-import AddIcon from "@material-ui/icons/Add";
 import Popup from "../../components/Popup";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import CloseIcon from "@material-ui/icons/Close";
-import axios from "axios";
 import { useEffect } from "react";
-import Swal from "sweetalert2";
 import SaleTable from "./saleTable";
 import Products from "./Products";
 import Cotizacionpdf from "../../components/pdf/cotizacion";

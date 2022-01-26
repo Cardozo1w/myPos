@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import {
-  Table,
   TableHead,
   TableRow,
   TableCell,
-  TablePagination,
   TableSortLabel,
 } from "@material-ui/core";
 import { PDFViewer } from "@react-pdf/renderer";
@@ -23,11 +21,8 @@ import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
 import AddIcon from "@material-ui/icons/Add";
 import Popup from "../../components/Popup";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
 import { useEffect } from "react";
-import Swal from "sweetalert2";
 import Cotizacionpdf from "../../components/pdf/cotizacionLista";
 
 const useStyles = makeStyles((theme) => ({
@@ -111,14 +106,13 @@ export default function ListadoCotizaciones() {
     setOrderBy(cellId);
   };
 
-  const [clienteCotizacion, setCliente] = useState({
-    idCliente: "",
-    nombre: "",
-  });
   const [productosCotizacion, setProductos] = useState([]);
   const [folio, setFolio] = useState(null);
   const [total, setTotal] = useState(0);
   const [fecha, setFecha] = useState(null);
+  const [clienteCotizacion, setCliente] = useState({
+    idCliente: "",
+  });
 
   const obtenerCotizacion = async (
     folioCotizacion,
@@ -130,13 +124,13 @@ export default function ListadoCotizaciones() {
     );
     let cliente = data.cliente[0];
     cliente = cliente[0];
-    setFolio(folioCotizacion);
-    setTotal(totalCotizacion);
-    setFecha(fechaCotizacion);
-
     if (cliente !== undefined) {
       setCliente(cliente);
     }
+
+    setFolio(folioCotizacion);
+    setTotal(totalCotizacion);
+    setFecha(fechaCotizacion);
     setProductos(data.productos[0]);
     setOpenPopup(true);
   };
@@ -202,9 +196,9 @@ export default function ListadoCotizaciones() {
               {cotizaciones.map((item) => (
                 <TableRow
                   key={item.folio}
-                  onClick={() =>
-                    obtenerCotizacion(item.folio, item.total, item.fecha)
-                  }
+                  onClick={() => {
+                    obtenerCotizacion(item.folio, item.total, item.fecha);
+                  }}
                 >
                   <TableCell>{item.folio}</TableCell>
                   <TableCell>{item.idCliente}</TableCell>
@@ -227,6 +221,7 @@ export default function ListadoCotizaciones() {
             <PDFViewer style={{ width: "800px", height: "90vh" }}>
               <Cotizacionpdf
                 customer={clienteCotizacion}
+                setCliente={setCliente}
                 productos={productosCotizacion}
                 total={total}
                 folio={folio}

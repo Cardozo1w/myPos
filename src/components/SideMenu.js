@@ -1,8 +1,5 @@
 import React from "react";
-import { makeStyles, withStyles } from "@material-ui/core";
-import { FaTruck } from "react-icons/fa";
-
-// withStyles & makeStyles
+import { withStyles } from "@material-ui/core";
 
 const style = {
   sideMenu: {

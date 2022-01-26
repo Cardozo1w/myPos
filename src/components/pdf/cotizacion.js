@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Document, Page, Text, View, Image } from "@react-pdf/renderer";
 import membrete from "../../img/membrete.jpg";
 import cotimg from "../../img/cot.jpg";
+import { tableHead } from "./cotizacionLista";
 
 const CotizacionPdf = ({
   customer,
@@ -37,7 +38,7 @@ const CotizacionPdf = ({
       setFolio(null);
 
       setTotal(0);
-     
+
       setProductosVenta([]);
     };
 
@@ -45,12 +46,10 @@ const CotizacionPdf = ({
   }, []);
 
   const nombreOracion = () => {
-   let nombre = cliente.nombre.toLowerCase();
-   nombre = nombre.replace(/\b\w/g, (l) => l.toUpperCase());
-   return nombre;
-
+    let nombre = cliente.nombre.toLowerCase();
+    nombre = nombre.replace(/\b\w/g, (l) => l.toUpperCase());
+    return nombre;
   };
-
 
   const meses = [
     "Enero",
@@ -128,38 +127,33 @@ const CotizacionPdf = ({
           ) : null}
 
           <View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                fontSize: "13px",
-                borderTop: "2px solid #000",
-                borderBottom: "2px solid #000",
-                padding: "5px 0",
-              }}
-            >
-              <Text>Codigo</Text>
-              <Text>Descripcion</Text>
-              <Text>Precio</Text>
-              <Text>Cantidad</Text>
-              <Text>Total</Text>
+            <View style={tableHead}>
+              <Text style={{ flexBasis: "10%" }}>Codigo</Text>
+              <Text style={{ flexBasis: "45%" }}>Descripcion</Text>
+              <Text style={{ flexBasis: "15%", textAlign: "center" }}>
+                Precio
+              </Text>
+              <Text style={{ flexBasis: "15%" }}>Cantidad</Text>
+              <Text style={{ flexBasis: "15%" }}>Total</Text>
             </View>
             {productosCotizacion.map((producto) => (
               <View
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  fontSize: "9px",
-                  justifyContent: "space-between",
+                  fontSize: "8px",
                   marginTop: "5px",
                 }}
               >
-                <Text>{producto.idProducto}</Text>
-                <Text>{producto.descripcion.substring(0, 20)}</Text>
-                <Text>$ {producto.precio.toFixed(2)}</Text>
-                <Text>{producto.cantidad}</Text>
-                <Text>
+                <Text style={{ flexBasis: "10%" }}>{producto.idProducto}</Text>
+                <Text style={{ flexBasis: "45%" }}>{producto.descripcion}</Text>
+                <Text style={{ flexBasis: "15%", paddingLeft: "15px" }}>
+                  $ {producto.precio.toFixed(2)}
+                </Text>
+                <Text style={{ flexBasis: "15%", paddingLeft: "10px" }}>
+                  {producto.cantidad.toFixed(2)}
+                </Text>
+                <Text style={{ flexBasis: "15%" }}>
                   $ {(producto.precio * producto.cantidad).toFixed(2)}
                 </Text>
               </View>
@@ -167,12 +161,19 @@ const CotizacionPdf = ({
           </View>
 
           <Text
-            style={{ textAlign: "right", marginTop: "15px", fontSize: "14px", marginBottom: '20px' }}
+            style={{
+              textAlign: "right",
+              marginTop: "15px",
+              fontSize: "14px",
+              marginBottom: "20px",
+            }}
           >
             TOTAL: ${totalCotizacion.toFixed(2)}
           </Text>
 
-          <Text style={{fontSize: '10px'}}>PRECIOS SUJETOS A CAMBIO SIN PREVIO AVISO</Text>
+          <Text style={{ fontSize: "10px" }}>
+            PRECIOS SUJETOS A CAMBIO SIN PREVIO AVISO
+          </Text>
         </View>
       </Page>
     </Document>

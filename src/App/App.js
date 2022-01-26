@@ -1,14 +1,9 @@
-import React, { useState, Fragment } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import React from "react";
 import "./App.css";
-import SideMenu from "../components/SideMenu";
 import {
-  makeStyles,
-  CssBaseline,
   createMuiTheme,
   ThemeProvider,
 } from "@material-ui/core";
-import Cotizacionpdf from "../components/pdf/cotizacion";
 
 import Main from "../pages/main";
 
@@ -45,7 +40,6 @@ function App() {
     <ThemeProvider theme={theme}>
      <Main />
     </ThemeProvider>
-    // <Cotizacionpdf />
   );
 }
 

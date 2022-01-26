@@ -1,31 +1,23 @@
 import React, { useState } from "react";
 import {
-  Table,
   TableHead,
   TableRow,
   TableCell,
-  TablePagination,
   TableSortLabel,
 } from "@material-ui/core";
 
-import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
 import {
-  Paper,
   makeStyles,
   TableBody,
   Toolbar,
   InputAdornment,
 } from "@material-ui/core";
 import useTable from "../../components/useTable";
-//import * as employeeService from "../../services/employeeService";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
-import AddIcon from "@material-ui/icons/Add";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import CloseIcon from "@material-ui/icons/Close";
+
 import axios from "axios";
 import { useEffect } from "react";
-import Swal from "sweetalert2";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -121,7 +113,7 @@ export default function Products({
     <>
       <Toolbar>
         <Controls.Input
-          label="Buscar Cliente"
+          label="Buscar Producto"
           className={classes.searchInput}
           InputProps={{
             startAdornment: (

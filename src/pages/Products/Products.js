@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import {
-  Table,
   TableHead,
   TableRow,
   TableCell,
-  TablePagination,
   TableSortLabel,
 } from "@material-ui/core";
 
@@ -25,7 +23,6 @@ import { Search } from "@material-ui/icons";
 import AddIcon from "@material-ui/icons/Add";
 import Popup from "../../components/Popup";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
 import { useEffect } from "react";
 import AgregarProducto from "./AgregarProducto";

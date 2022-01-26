@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
-  Table,
   TableHead,
   TableRow,
   TableCell,
-  TablePagination,
   TableSortLabel,
 } from "@material-ui/core";
-
 import ProductForm from "./CustomersForm";
 import PageHeader from "../../components/PageHeader";
 import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
@@ -25,7 +22,6 @@ import { Search } from "@material-ui/icons";
 import AddIcon from "@material-ui/icons/Add";
 import Popup from "../../components/Popup";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
 import AgregarCliente from "./AgregarCliente";
 import Swal from "sweetalert2";
