@@ -3,7 +3,6 @@ import Customers from "./Customers";
 import { PDFViewer } from "@react-pdf/renderer";
 import PageHeader from "../../components/PageHeader";
 import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
-import receipt from "receipt";
 import { Paper, makeStyles, Toolbar, InputAdornment } from "@material-ui/core";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
@@ -12,6 +11,9 @@ import axios from "axios";
 import SaleTable from "./saleTable";
 import Products from "./Products";
 import Cotizacionpdf from "../../components/pdf/cotizacion";
+const ipcRenderer = window.ipcRenderer;
+const hola = window.hola;
+
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -28,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Sales() {
+
+console.log(hola);
+
   const [openPopup, setOpenPopup] = useState(false);
   const [openProducts, setOpenProducts] = useState(false);
 
@@ -73,6 +78,65 @@ export default function Sales() {
     setFolio(data.folio);
     setAbrirCotizacion(true);
   };
+ 
+const receipt = [
+  {
+    type: 'qrCode',
+     value: 'https://github.com/Hubertformin/electron-pos-printer',
+     height: 55,
+     width: 55,
+     style: 'margin: 10 20px 20 20px'
+   },{
+    type: 'text',                                       // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+    value: 'SAMPLE HEADING',
+    style: `text-align:center;`,
+    css: {"font-weight": "700", "font-size": "18px"}
+ },{
+    type: 'text',                       // 'text' | 'barCode' | 'qrCode' | 'image' | 'table'
+    value: 'Secondary text',
+    style: `text-align:left;color: red;`,
+    css: {"text-decoration": "underline", "font-size": "10px"}
+ },{
+    type: 'barCode',
+    value: 'HB4587896',
+    height: 12,                     // height of barcode, applicable only to bar and QR codes
+    width: 1,                       // width of barcode, applicable only to bar and QR codes
+    displayValue: true,             // Display value below barcode
+    fontsize: 8,
+ },{
+   type: 'qrCode',
+    value: 'https://github.com/Hubertformin/electron-pos-printer',
+    height: 55,
+    width: 55,
+    style: 'margin: 10 20px 20 20px'
+  },{
+     type: 'table',
+     // style the table
+     style: 'border: 1px solid #ddd',
+     // list of the columns to be rendered in the table header
+     tableHeader: ['Animal', 'Age'],
+     // multi dimensional array depicting the rows and columns of the table body
+     tableBody: [
+         ['Cat', 2],
+         ['Dog', 4],
+         ['Horse', 12],
+         ['Pig', 4],
+     ],
+     // list of columns to be rendered in the table footer
+     tableFooter: ['Animal', 'Age'],
+     // custom style for the table header
+     tableHeaderStyle: 'background-color: #000; color: white;',
+     // custom style for the table body
+     tableBodyStyle: 'border: 0.5px solid #ddd',
+     // custom style for the table footer
+     tableFooterStyle: 'background-color: #000; color: white;',
+  }
+]
+
+  const printData = () => {
+    console.log('Intentando imprimir...')
+    ipcRenderer.send('print', JSON.stringify(receipt))
+  }
 
   return (
     <>
@@ -133,9 +197,10 @@ export default function Sales() {
           variant="outlined"
           className=""
           disabled={productosVenta.length === 0}
-          onClick={() => {
-            generarCotizacion();
-          }}
+          // onClick={() => {
+          //   generarCotizacion();
+          // }}
+          onClick={printData}
         />
         <div className="overflow">
           <SaleTable
