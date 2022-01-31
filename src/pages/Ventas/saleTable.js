@@ -5,13 +5,23 @@ import {
   TableCell,
   TableSortLabel,
 } from "@material-ui/core";
+import {
 
-import { makeStyles, TableBody } from "@material-ui/core";
+  makeStyles,
+  TableBody,
+} from "@material-ui/core";
 import useTable from "../../components/useTable";
+//import * as employeeService from "../../services/employeeService";
 import Controls from "../../components/controls/Controls";
+import { Search } from "@material-ui/icons";
+import AddIcon from "@material-ui/icons/Add";
+import Popup from "../../components/Popup";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
+import { useEffect } from "react";
 import Swal from "sweetalert2";
-import { useForm } from "../../components/useForm";
+import { useForm, Form } from "../../components/useForm";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -33,6 +43,7 @@ const headCells = [
   { id: "precio", label: "Precio" },
   { id: "cantidad", label: "Cantidad" },
   { id: "total", label: "Total" },
+  {id:'acciones', label: "Acciones"}
 ];
 
 export default function SaleTable({ productosVenta, setProductosVenta }) {
@@ -40,6 +51,7 @@ export default function SaleTable({ productosVenta, setProductosVenta }) {
   const [refresh, setRefresh] = useState(false);
   const pages = [5, 10, 25];
   const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
   const classes = useStyles();
@@ -96,21 +108,10 @@ export default function SaleTable({ productosVenta, setProductosVenta }) {
     setOrderBy(cellId);
   };
 
-  const deleteItem = async (deleteId) => {
-    Swal.fire({
-      title: "¿Estás seguro de querer eliminar este registro?",
-      text: "La acción no se puede revertir",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Si, eliminar",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await axios.delete(`http://localhost:4000/api/${deleteId}`);
-        setRefresh(true);
-      }
-    });
+  const deleteItem = async (idProducto) => {
+   console.log(idProducto);
+   let deleteProduct = productosVenta.filter(producto=> producto.idProducto !== idProducto)
+   setProductosVenta(deleteProduct);
   };
 
   const cantidadChange = (e, item) => {
@@ -184,6 +185,14 @@ export default function SaleTable({ productosVenta, setProductosVenta }) {
               </TableCell>
               <TableCell>
                 $ {(item.precio * item.cantidad).toFixed(2)}
+              </TableCell>
+              <TableCell>
+               <Controls.ActionButton color="secondary">
+                      <CloseIcon
+                        fontSize="small"
+                        onClick={() => deleteItem(item.idProducto)}
+                      />
+                    </Controls.ActionButton>
               </TableCell>
             </TableRow>
           ))}

@@ -13,7 +13,6 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 import useTable from "../../components/useTable";
-//import * as employeeService from "../../services/employeeService";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
 
@@ -108,13 +107,14 @@ export default function Products({
     item.cantidad = 1;
     setProductosVenta([...productosVenta, item]);
     setOpenProducts(false);
+    console.log(productosVenta);
   };
 
   return (
     <>
       <Toolbar>
         <Controls.Input
-          label="Buscar Cliente"
+          label="Buscar Producto"
           className={classes.searchInput}
           InputProps={{
             startAdornment: (

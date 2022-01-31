@@ -20,6 +20,7 @@ const SideMenu = (props) => {
       <div className="mt">
         <MenuItem title="Nota de Venta" setActive={setActive} active="sales" />
         <MenuItem title="Cotizaciones" setActive={setActive} active="cotizaciones" />
+        <MenuItem title="Listado Ventas" setActive={setActive} active="listadoventas" />
         <MenuItem title="Listado Cotizaciones" setActive={setActive} active="listadocotizaciones" />
         <MenuItem title="Clientes" setActive={setActive} active="customers" />
         <MenuItem title="Productos" setActive={setActive} active="products" />

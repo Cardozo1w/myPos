@@ -36,9 +36,7 @@ const CotizacionPdf = ({
       setTotalCotizacion(total);
       setFolioCotizacion(folio);
       setFolio(null);
-
       setTotal(0);
-
       setProductosVenta([]);
     };
 

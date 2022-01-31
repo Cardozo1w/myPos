@@ -6,7 +6,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100px;
+  height: 80px;
   border-bottom: 1px solid #fff;
   font-size: 20px;
   color: #fff;
@@ -36,4 +36,10 @@ body {
 .overflow {
   overflow-y: scroll;
   height: 500px;
+}
+
+
+.overflow {
+  overflow-y: scroll;
+  height: 350px;
 }

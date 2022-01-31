@@ -17,10 +17,8 @@ import useTable from "../../components/useTable";
 //import * as employeeService from "../../services/employeeService";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
-import AddIcon from "@material-ui/icons/Add";
-import Popup from "../../components/Popup";
-import axios from 'axios';
 
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {

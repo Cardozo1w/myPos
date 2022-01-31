@@ -4,16 +4,15 @@ import PageHeader from "../components/PageHeader";
 
 import Customers from "../pages/Customers/Customers";
 import Products from "../pages/Products/Products";
-import Sales from "../pages/Sales/Sales";
+import Sales from "../pages/Ventas/Sales";
 import Cotizaciones from "../pages/Cotizaciones/Sales";
 import ListadoCotizaciones from "./ListadoCotizaciones/ListadoCotizaciones";
+import ListadoVentas from './ListadoVentas/ListadoVentas'
 
 import SideMenu from "../components/SideMenu";
 import {
   makeStyles,
-  CssBaseline,
-  createMuiTheme,
-  ThemeProvider,
+  CssBaseline
 } from "@material-ui/core";
 
 const useStyles = makeStyles({
@@ -25,7 +24,7 @@ const useStyles = makeStyles({
 
 const Main = () => {
   const classes = useStyles();
-  const [active, setActive] = useState("cotizaciones");
+  const [active, setActive] = useState("sales");
 
   return (
     <Fragment>
@@ -34,6 +33,7 @@ const Main = () => {
         <Header />
         {active === "sales" && <Sales />}
         {active === "cotizaciones" && <Cotizaciones />}
+        {active === "listadoventas" && <ListadoVentas />}
         {active === "listadocotizaciones" && <ListadoCotizaciones />}
         {active === "products" && <Products />}
         {active === "customers" && <Customers />}
