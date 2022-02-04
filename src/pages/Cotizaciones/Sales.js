@@ -11,7 +11,6 @@ import axios from "axios";
 import SaleTable from "./saleTable";
 import Products from "./Products";
 import Cotizacionpdf from "../../components/pdf/cotizacion";
-const ipcRenderer = window.ipcRenderer;
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {

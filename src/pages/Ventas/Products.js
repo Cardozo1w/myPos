@@ -45,21 +45,12 @@ export default function Products({
   productosVenta,
   setProductosVenta,
 }) {
-  const [agregarForm, setAgregarForm] = useState(false);
   const [productos, setProductos] = useState([]);
   const [refresh, setRefresh] = useState(false);
-  const pages = [5, 10, 25];
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
   const classes = useStyles();
-  const [recordForEdit, setRecordForEdit] = useState(null);
-  const [filterFn, setFilterFn] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
+
 
   useEffect(() => {
     const obtenerProductos = async () => {
@@ -71,21 +62,10 @@ export default function Products({
     obtenerProductos();
   }, [refresh]);
 
-  const [openPopup, setOpenPopup] = useState(false);
-
-  const { TblContainer, TblHead, TblPagination } = useTable(
-    headCells,
-    filterFn
+  const { TblContainer } = useTable(
+    headCells
   );
-
-  const addOrEdit = (employee, resetForm) => {};
-
-  const openInPopup = (item) => {
-    setRecordForEdit(item);
-    setOpenPopup(true);
-  };
-
-  const handleSortRequest = (cellId) => {
+ const handleSortRequest = (cellId) => {
     const isAsc = orderBy === cellId && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(cellId);
@@ -107,14 +87,18 @@ export default function Products({
     item.cantidad = 1;
     setProductosVenta([...productosVenta, item]);
     setOpenProducts(false);
-    console.log(productosVenta);
+    
   };
+
+  //document.querySelector('#search').focus();
 
   return (
     <>
       <Toolbar>
         <Controls.Input
           label="Buscar Producto"
+          id="search"
+          autoFocus
           className={classes.searchInput}
           InputProps={{
             startAdornment: (
@@ -126,6 +110,7 @@ export default function Products({
           onChange={handleSearch}
         />
       </Toolbar>
+      
       <TblContainer>
         <TableHead>
           <TableRow>

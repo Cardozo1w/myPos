@@ -45,21 +45,11 @@ export default function Products({
   productosVenta,
   setProductosVenta,
 }) {
-  const [agregarForm, setAgregarForm] = useState(false);
   const [productos, setProductos] = useState([]);
   const [refresh, setRefresh] = useState(false);
-  const pages = [5, 10, 25];
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
   const classes = useStyles();
-  const [recordForEdit, setRecordForEdit] = useState(null);
-  const [filterFn, setFilterFn] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
 
   useEffect(() => {
     const obtenerProductos = async () => {
@@ -71,20 +61,10 @@ export default function Products({
     obtenerProductos();
   }, [refresh]);
 
-  const [openPopup, setOpenPopup] = useState(false);
 
   const { TblContainer, TblHead, TblPagination } = useTable(
-    headCells,
-    filterFn
+    headCells
   );
-
-  const addOrEdit = (employee, resetForm) => {};
-
-  const openInPopup = (item) => {
-    setRecordForEdit(item);
-    setOpenPopup(true);
-  };
-
   const handleSortRequest = (cellId) => {
     const isAsc = orderBy === cellId && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -115,6 +95,7 @@ export default function Products({
         <Controls.Input
           label="Buscar Producto"
           className={classes.searchInput}
+          autoFocus
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">

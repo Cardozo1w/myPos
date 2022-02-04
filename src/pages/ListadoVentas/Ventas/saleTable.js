@@ -10,22 +10,8 @@ import {
   TableBody,
 } from "@material-ui/core";
 import useTable from "../../../components/useTable";
-import Controls from "../../../components/controls/Controls";
-import { useForm, Form } from "../../../components/useForm";
 
-const useStyles = makeStyles((theme) => ({
-  pageContent: {
-    margin: theme.spacing(5),
-    padding: theme.spacing(3),
-  },
-  searchInput: {
-    width: "75%",
-  },
-  newButton: {
-    position: "absolute",
-    right: "10px",
-  },
-}));
+
 
 const headCells = [
   { id: "id", label: "Clave" },
@@ -36,31 +22,17 @@ const headCells = [
 ];
 
 export default function SaleTable({ productosVenta, setProductosVenta }) {
-  const [productos, setProductos] = useState([]);
-  const [refresh, setRefresh] = useState(false);
-  const pages = [5, 10, 25];
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
+
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
-  const classes = useStyles();
-  const [recordForEdit, setRecordForEdit] = useState(null);
-  const [filterFn, setFilterFn] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
 
-
- 
   const handleSortRequest = (cellId) => {
     const isAsc = orderBy === cellId && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(cellId);
   };
   const { TblContainer } = useTable(
-    headCells,
-    filterFn
+    headCells
   );
 
 

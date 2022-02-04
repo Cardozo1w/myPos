@@ -5,8 +5,6 @@ const ipcMain = electron.ipcMain;
 const { PosPrinter } = require('electron-pos-printer')
 const path = require('path');
 const isDev = require('electron-is-dev');
-const ThermalPrinter = require("node-thermal-printer").printer;
-const PrinterTypes = require("node-thermal-printer").types;
 
 let mainWindow;
 
@@ -77,7 +75,12 @@ ipcMain.on('print', (event, arg) => {
     },
     {
       type: 'text',                                       // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
-      value: `AV. 5 DE MAYO S/N CP. 95641`,
+      value: `AV. 5 DE MAYO SUR No. 79 CP. 95641`,
+      style: `text-align:center; margin-top: 5px;`,
+      css: { "font-weight": "700", "font-size": "11px" }
+    },{
+      type: 'text',                                       // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+      value: `Tel. (283) 87 4-11-92`,
       style: `text-align:center; margin-top: 5px;`,
       css: { "font-weight": "700", "font-size": "11px" }
     }, {
@@ -103,7 +106,7 @@ ipcMain.on('print', (event, arg) => {
       // style the table
       style: 'font-weight": "700"; "font-size": "12px;',
       // list of the columns to be rendered in the table header
-      tableHeader: ['Producto', 'Precio', 'Cant', 'Total'],
+      tableHeader: ['Producto',  'Cant', 'Precio', 'Total'],
       // multi dimensional array depicting the rows and columns of the table body
       tableBody: data.productosNota,
       tableBodyStyle: 'font-size: 9px; font-weight: 700;',

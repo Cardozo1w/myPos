@@ -1,6 +1,5 @@
 import React, { Fragment, useState } from "react";
 import Header from "../components/Header";
-import PageHeader from "../components/PageHeader";
 
 import Customers from "../pages/Customers/Customers";
 import Products from "../pages/Products/Products";

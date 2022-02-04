@@ -33,49 +33,6 @@ export default function Sales({productosVenta}) {
     setTotal(tot);
   }, [productosVenta]);
 
-  const meses = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
-  ];
-  // Creamos array con los días de la semana
-  const dias_semana = [
-    "Domingo",
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-  ];
-  // Creamos el objeto fecha instanciándolo con la clase Date
-  const fecha = new Date();
-
-  const dd = fecha.getDate();
-  const mm = fecha.getMonth() + 1; //January is 0!
-  const yyyy = fecha.getFullYear();
-
-  const today = mm + "/" + dd + "/" + yyyy;
-
-  // Construimos el formato de salida
-  const hoy =
-    dias_semana[fecha.getDay()] +
-    ", " +
-    fecha.getDate() +
-    " de " +
-    meses[fecha.getMonth()] +
-    " de " +
-    fecha.getUTCFullYear();
-
 
   return (
     <>

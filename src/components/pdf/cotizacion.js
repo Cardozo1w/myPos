@@ -149,7 +149,7 @@ const CotizacionPdf = ({
                   $ {producto.precio.toFixed(2)}
                 </Text>
                 <Text style={{ flexBasis: "15%", paddingLeft: "10px" }}>
-                  {producto.cantidad.toFixed(2)}
+                  {parseFloat(producto.cantidad).toFixed(2)}
                 </Text>
                 <Text style={{ flexBasis: "15%" }}>
                   $ {(producto.precio * producto.cantidad).toFixed(2)}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PageHeader from "../../components/PageHeader";
 import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
-import { Paper, makeStyles, Toolbar, InputAdornment } from "@material-ui/core";
+import { Paper, makeStyles } from "@material-ui/core";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
 import Popup from "../../components/Popup";
@@ -25,15 +25,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Sales() {
-  const [openPopup, setOpenPopup] = useState(false);
   const [openProducts, setOpenProducts] = useState(false);
 
-  const [folio, setFolio] = useState(null);
   const [productosVenta, setProductosVenta] = useState([]);
-  const [cliente, setCliente] = useState({
-    nombre: "",
-    idCliente: "",
-  });
+
   const [total, setTotal] = useState(0);
 
   const classes = useStyles();
@@ -105,7 +100,6 @@ export default function Sales() {
           productos: productosVenta,
         }
       );
-      setFolio(ventaNueva.data.folio);
       let productosNota = [];
       let arrayRandom = [];
       if (ventaNueva.status === 200) {
@@ -114,9 +108,9 @@ export default function Sales() {
         productosVenta.map(item => {
           arrayRandom = [];
           arrayRandom.push(`(${item.idProducto}) ${item.descripcion}`)
-          arrayRandom.push(item.precio.toFixed(2))
           arrayRandom.push(parseFloat(item.cantidad).toFixed(2))
-          arrayRandom.push((item.cantidad * item.precio).toFixed(2))
+          arrayRandom.push(parseFloat(item.precio).toFixed(2))
+          arrayRandom.push((parseFloat(item.cantidad) * parseFloat(item.precio)).toFixed(2))
           productosNota.push(arrayRandom)
           arrayRandom = []
         })

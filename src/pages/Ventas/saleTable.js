@@ -13,15 +13,7 @@ import {
 import useTable from "../../components/useTable";
 //import * as employeeService from "../../services/employeeService";
 import Controls from "../../components/controls/Controls";
-import { Search } from "@material-ui/icons";
-import AddIcon from "@material-ui/icons/Add";
-import Popup from "../../components/Popup";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CloseIcon from "@material-ui/icons/Close";
-import axios from "axios";
-import { useEffect } from "react";
-import Swal from "sweetalert2";
-import { useForm, Form } from "../../components/useForm";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -47,60 +39,14 @@ const headCells = [
 ];
 
 export default function SaleTable({ productosVenta, setProductosVenta }) {
-  const [productos, setProductos] = useState([]);
-  const [refresh, setRefresh] = useState(false);
-  const pages = [5, 10, 25];
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
   const classes = useStyles();
-  const [recordForEdit, setRecordForEdit] = useState(null);
-  const [filterFn, setFilterFn] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
 
-  const initialFValues = {
-    cantidad: "",
-  };
-
-  const validate = (fieldValues = values) => {
-    let temp = { ...errors };
-    if ("cantidad" in fieldValues)
-      temp.cantidad = fieldValues.cantidad ? "" : "Este campo es requerido";
-  };
-
-  const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
-    useForm(initialFValues, true, validate);
-
-  const [openPopup, setOpenPopup] = useState(false);
-
-  const { TblContainer, TblHead, TblPagination } = useTable(
-    headCells,
-    filterFn
+  const { TblContainer } = useTable(
+    headCells
   );
 
-  const handleSearch = async (e) => {
-    let target = e.target.value;
-    if (target === "") {
-      setRefresh(true);
-    } else {
-      console.log(target);
-      const { data } = await axios.post("http://localhost:4000/api/like/", {
-        target: target,
-      });
-      setProductos(data);
-    }
-  };
-
-  const addOrEdit = (employee, resetForm) => {};
-
-  const openInPopup = (item) => {
-    setRecordForEdit(item);
-    setOpenPopup(true);
-  };
 
   const handleSortRequest = (cellId) => {
     const isAsc = orderBy === cellId && order === "asc";

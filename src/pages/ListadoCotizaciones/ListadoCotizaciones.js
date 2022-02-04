@@ -19,7 +19,6 @@ import useTable from "../../components/useTable";
 //import * as employeeService from "../../services/employeeService";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
-import AddIcon from "@material-ui/icons/Add";
 import Popup from "../../components/Popup";
 import axios from "axios";
 import { useEffect } from "react";
@@ -47,21 +46,12 @@ const headCells = [
 ];
 
 export default function ListadoCotizaciones() {
-  const [agregarForm, setAgregarForm] = useState(false);
   const [cotizaciones, setCotizaciones] = useState([]);
   const [refresh, setRefresh] = useState(false);
-  const pages = [5, 10, 25];
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
   const classes = useStyles();
-  const [recordForEdit, setRecordForEdit] = useState(null);
-  const [filterFn, setFilterFn] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
+  
 
   useEffect(() => {
     const obtenerProductos = async () => {
@@ -75,9 +65,8 @@ export default function ListadoCotizaciones() {
 
   const [openPopup, setOpenPopup] = useState(false);
 
-  const { TblContainer, TblHead, TblPagination } = useTable(
-    headCells,
-    filterFn
+  const { TblContainer } = useTable(
+    headCells
   );
 
   const handleSearch = async (e) => {
@@ -92,14 +81,6 @@ export default function ListadoCotizaciones() {
     //   setCotizaciones(data);
     // }
   };
-
-  const addOrEdit = (employee, resetForm) => {};
-
-  const openInPopup = (item) => {
-    setRecordForEdit(item);
-    setOpenPopup(true);
-  };
-
   const handleSortRequest = (cellId) => {
     const isAsc = orderBy === cellId && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -155,15 +136,6 @@ export default function ListadoCotizaciones() {
               ),
             }}
             onChange={handleSearch}
-          />
-          <Controls.Button
-            text="Agregar Nuevo"
-            variant="outlined"
-            startIcon={<AddIcon />}
-            className={classes.newButton}
-            onClick={() => {
-              setAgregarForm(true);
-            }}
           />
         </Toolbar>
         <div className="overflow">

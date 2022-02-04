@@ -17,7 +17,6 @@ import useTable from "../../components/useTable";
 //import * as employeeService from "../../services/employeeService";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
-import AddIcon from "@material-ui/icons/Add";
 import axios from "axios";
 import { useEffect } from "react";
 import Sales from "./Ventas/Sales";
@@ -50,21 +49,11 @@ const headCells = [
 ];
 
 export default function ListadoVentas() {
-  const [agregarForm, setAgregarForm] = useState(false);
   const [cotizaciones, setCotizaciones] = useState([]);
   const [refresh, setRefresh] = useState(false);
-  const pages = [5, 10, 25];
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
   const classes = useStyles();
-  const [recordForEdit, setRecordForEdit] = useState(null);
-  const [filterFn, setFilterFn] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
 
   useEffect(() => {
     const obtenerVentas = async () => {
@@ -78,9 +67,8 @@ export default function ListadoVentas() {
 
   const [openPopup, setOpenPopup] = useState(false);
 
-  const { TblContainer, TblHead, TblPagination } = useTable(
-    headCells,
-    filterFn
+  const { TblContainer } = useTable(
+    headCells
   );
 
   const handleSearch = async (e) => {
@@ -96,12 +84,6 @@ export default function ListadoVentas() {
     // }
   };
 
-  const addOrEdit = (employee, resetForm) => { };
-
-  const openInPopup = (item) => {
-    setRecordForEdit(item);
-    setOpenPopup(true);
-  };
 
   const handleSortRequest = (cellId) => {
     const isAsc = orderBy === cellId && order === "asc";
@@ -110,12 +92,7 @@ export default function ListadoVentas() {
   };
 
   const [productosVenta, setProductos] = useState([]);
-  const [folio, setFolio] = useState(null);
-  const [total, setTotal] = useState(0);
-  const [fecha, setFecha] = useState(null);
-  const [clienteCotizacion, setCliente] = useState({
-    idCliente: "",
-  });
+  const [folio, setFolio] = useState(null)
 
 
   const verVenta = async (
@@ -172,16 +149,16 @@ export default function ListadoVentas() {
       date.getUTCFullYear();
 
 
-    
+
     let productosNota = [];
     let arrayRandom = [];
 
     data.map(item => {
       arrayRandom = [];
       arrayRandom.push(`(${item.idProducto}) ${item.descripcion}`)
-      arrayRandom.push(item.precio.toFixed(2))
       arrayRandom.push(parseFloat(item.cantidad).toFixed(2))
-      arrayRandom.push((item.cantidad * item.precio).toFixed(2))
+      arrayRandom.push(parseFloat(item.precio).toFixed(2))
+      arrayRandom.push((parseFloat(item.cantidad) * parseFloat(item.precio)).toFixed(2))
       console.log(arrayRandom)
       productosNota.push(arrayRandom)
       arrayRandom = []
@@ -189,7 +166,7 @@ export default function ListadoVentas() {
 
     printData({ folio: folioReceipt, productosNota, hoy, total: parseFloat(totalReceipt) });
     //console.log(productosNota);
-   // console.log({ folio: folioReceipt, productosNota, hoy, totalReceipt })
+    // console.log({ folio: folioReceipt, productosNota, hoy, totalReceipt })
   };
 
 
@@ -216,15 +193,7 @@ export default function ListadoVentas() {
             }}
             onChange={handleSearch}
           />
-          <Controls.Button
-            text="Agregar Nuevo"
-            variant="outlined"
-            startIcon={<AddIcon />}
-            className={classes.newButton}
-            onClick={() => {
-              setAgregarForm(true);
-            }}
-          />
+
         </Toolbar>
         <div className="overflow">
           <TblContainer>

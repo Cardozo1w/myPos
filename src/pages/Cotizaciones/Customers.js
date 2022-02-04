@@ -103,6 +103,7 @@ export default function Customers({ setCliente, setOpenPopup }) {
         <Controls.Input
           label="Buscar Cliente"
           className={classes.searchInput}
+          autoFocus
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
