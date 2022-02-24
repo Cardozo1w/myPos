@@ -1,0 +1,155 @@
+{
+    "emisor": {
+        "rfc": "GOYA780416GM0",
+        "nombre": "EMPRESA DE DEMOSTRACION S.A. DE C.V.",
+        "regimenFiscal": "612",
+        "descripcionFacturador": "Personas Físicas con Actividades Empresariales y Profesionales",
+        "sucursal": {
+            "nombre": "Atizapán",
+            "pais": "MEX",
+            "estado": "Edo. de México",
+            "municipio": "Atizapán de Zaragoza",
+            "localidad": "",
+            "colonia": "México Nuevo",
+            "calle": "Veracruz",
+            "noExterior": "34",
+            "noInterior": "20",
+            "referencia": "",
+            "codigoPostal": "51907",
+            "descripcionColonia": "",
+            "descripcionLocalidad": "",
+            "descripcionMunicipio": "",
+            "descripcionEstado": "",
+            "descripcionPais": "",
+            "correo": " contacto@facturador.com "
+        }
+    },
+    "receptor": {
+        "rfc": "XAXX010101000",
+        "nombre": "EMPRESA DE PRUEBA TALLER 24",
+        "usoCFDI": "G03",
+        "descripcionFacturador": "Gastos en general",
+        "direccionIDFacturador": 0,
+        "direccion": {
+            "nombre": "Principal",
+            "pais": "",
+            "estado": "",
+            "municipio": "",
+            "localidad": "",
+            "colonia": "",
+            "calle": "",
+            "noExterior": "",
+            "noInterior": "",
+            "referencia": "",
+            "codigoPostal": "77500",
+            "descripcionColonia": "",
+            "descripcionLocalidad": "",
+            "descripcionMunicipio": "",
+            "descripcionEstado": "",
+            "descripcionPais": "",
+            "correo": "contacto@facturador.com"
+        },
+        "descripcionResidenciaFiscal": ""
+    },
+    "conceptos": [
+        {
+            "impuestos": {
+                "traslados": [
+                    {
+                        "base": 9000,
+                        "impuesto": "002",
+                        "tipoFactor": "Tasa",
+                        "tasaOCuota": 0.160000,
+                        "importe": 1440,
+                        "descripcionFacturador": "",
+                        "esExento": false
+                    }
+                ],
+                "retenciones": null
+            },
+            "claveProdServ": "10101502",
+            "noIdentificacion": "1",
+            "cantidad": 100,
+            "claveUnidad": "14",
+            "unidad": "Shot",
+            "descripcion": "NOTAS DE VENTA FOLIOS",
+            "valorUnitario": 90,
+            "importe": 9000,
+            "descuento": 0,
+            "claveFacturador": 0,
+            "descripcionFacturador": "",
+            "descripcionSat": "",
+            "complementoIds": [],
+            "idConcepto": 0
+        },
+        {
+            "impuestos": {
+                "traslados": [
+                    {
+                        "base": 86.20,
+                        "impuesto": "002",
+                        "tipoFactor": "Tasa",
+                        "tasaOCuota": 0.160000,
+                        "importe": 13.80,
+                        "descripcionFacturador": "",
+                        "esExento": false
+                    }
+                ],
+                "retenciones": null
+            },
+            "claveProdServ": "10101502",
+            "noIdentificacion": "1",
+            "cantidad": 1,
+            "claveUnidad": "14",
+            "unidad": "Shot",
+            "descripcion": "NOTAS DE VENTA FOLIOS",
+            "valorUnitario": 86.20,
+            "importe": 86.20,
+            "descuento": 0,
+            "claveFacturador": 0,
+            "descripcionFacturador": "",
+            "descripcionSat": "",
+            "complementoIds": [],
+            "idConcepto": 0
+        }
+    ],
+    "impuestos": {
+        "retenciones": null,
+        "traslados": [
+            {
+                "impuesto": "002",
+                "tipoFactor": "Tasa",
+                "tasaOCuota": 0.160000,
+                "importe": 1453.80
+            }
+        ],
+        "totalImpuestosRetenidos": 0,
+        "totalImpuestosTrasladados": 1453.80
+    },
+    "version": "3.3",
+    "serie": "Sin serie",
+    "folio": "806",
+    "fecha": "2017-11-16T12:25:18",
+    "sello": "",
+    "formaPago": "99",
+    "noCertificado": "20001000000200000216",
+    "certificado": "",
+    "subTotal": 9086.20,
+    "descuento": 0,
+    "moneda": "MXN",
+    "tipoCambio": 1,
+    "total": 10540,
+    "tipoDeComprobante": "I",
+    "metodoPago": "PPD",
+    "lugarExpedicion": "77500",
+    "informacionExtra": null,
+    "complementoIds": [
+        0
+    ],
+    "estatusComprobante": 1,
+    "descripcionFacturador": "Factura",
+    "descripcionMetodoPago": "",
+    "descripcionFormaPago": "",
+    "descripcionMoneda": "",
+    "descripcionTipoConfirmacion": ""
+}

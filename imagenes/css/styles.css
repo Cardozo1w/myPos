@@ -1,0 +1,74 @@
+        html {
+            font-size: 62.5%;
+            /*reset para rems*/
+        }
+        
+        body {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.6rem;
+            line-height: 2;
+        }
+        
+        .fw300andcenter {
+            font-weight: 300;
+            text-align: center;
+            text-transform: capitalize;
+        }
+        
+        .site-header.inicio {
+            background-image: url(../img/header.jpg);
+            background-position: center center;
+            height: 100vh;
+        }
+        
+        .site-header h1 {
+            text-transform: uppercase;
+        }
+        
+        .logo {
+            width: 280px;
+            position: relative;
+            padding: 30px;
+            padding-left: 30px;
+        }
+        
+        .barra {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .navegacion a {
+            text-decoration: none;
+            padding: 1rem;
+            font-size: 2.5rem;
+            color: white;
+            position: relative;
+            top: 3.4rem;
+            right: 2rem;
+        }
+        
+        .eslogan {
+            position: relative;
+            top: 15rem;
+            color: white;
+        }
+        
+        .nosotros h1 {
+            text-align: center;
+        }
+        
+        .nosotros p {
+            text-align: center;
+        }
+        
+        .iconos-nosotros {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        
+        .icono {
+            flex-basis: calc(33.3% - 1rem);
+            text-align: center;
+            width: 50%;
+        }

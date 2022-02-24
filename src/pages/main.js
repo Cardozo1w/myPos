@@ -6,13 +6,12 @@ import Products from "../pages/Products/Products";
 import Sales from "../pages/Ventas/Sales";
 import Cotizaciones from "../pages/Cotizaciones/Sales";
 import ListadoCotizaciones from "./ListadoCotizaciones/ListadoCotizaciones";
-import ListadoVentas from './ListadoVentas/ListadoVentas'
+import ListadoVentas from "./ListadoVentas/ListadoVentas";
+import Facturacion from "./Facturacion/Sales";
 
 import SideMenu from "../components/SideMenu";
-import {
-  makeStyles,
-  CssBaseline
-} from "@material-ui/core";
+import { makeStyles, CssBaseline } from "@material-ui/core";
+import Dashboard from "./dashboard";
 
 const useStyles = makeStyles({
   appMain: {
@@ -23,13 +22,15 @@ const useStyles = makeStyles({
 
 const Main = () => {
   const classes = useStyles();
-  const [active, setActive] = useState("sales");
+  const [active, setActive] = useState("dashboard");
 
   return (
     <Fragment>
-      <SideMenu setActive={setActive} />
+      <SideMenu setActive={setActive} now={active}/>
       <div className={classes.appMain}>
-        <Header />
+        {/* <Header /> */}
+        {active === "dashboard" && <Dashboard />}
+        {active === "facturacion" && <Facturacion />}
         {active === "sales" && <Sales />}
         {active === "cotizaciones" && <Cotizaciones />}
         {active === "listadoventas" && <ListadoVentas />}

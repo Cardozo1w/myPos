@@ -3,21 +3,33 @@ body {
 }
 
 .menu-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80px;
-  border-bottom: 1px solid #fff;
   font-size: 20px;
   color: #fff;
   transition: 0.2s all ease-in;
   cursor: pointer;
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
+  padding: 12px 20px;
+  /* border: .5px solid #fff; */
+  border-radius: 10px;
+  margin-bottom: 5px;
+  display: flex;
 }
 
-.menu-item:first-of-type {
+.menu-item svg{
+  margin-right: 10px;
+}
+
+/* .menu-item:first-of-type {
   border-top: 1px solid #fff;
+}*/
+
+/* .background {
+  background-color: rgba(255, 255, 255, 0.178);
+} */
+
+.background:first-of-type {
+  background-color: rgba(255, 255, 255, 0.178);
 }
 
 .menu-item:hover {
@@ -26,7 +38,7 @@ body {
 }
 
 .mt {
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 .mr-3 {
@@ -38,8 +50,26 @@ body {
   height: 500px;
 }
 
-
 .overflow {
   overflow-y: scroll;
   height: 350px;
+}
+
+.contenedor-dash{
+  margin: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-dash{
+  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+  background-color: #fff;
+  width: 30%;
+  padding: 20px 30px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.card-dash p{
+font-size: 20px;
 }

@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TableHead,
   TableRow,
   TableCell,
   TableSortLabel,
 } from "@material-ui/core";
-
+import PageHeader from "../../components/PageHeader";
+import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
 import {
   makeStyles,
   TableBody,
@@ -13,11 +14,11 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 import useTable from "../../components/useTable";
+//import * as employeeService from "../../services/employeeService";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
 
 import axios from "axios";
-import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   searchInput: {
-    width: "100%",
+    width: "75%",
   },
   newButton: {
     position: "absolute",
@@ -34,89 +35,75 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headCells = [
-  { id: "id", label: "Clave" },
-  { id: "desc", label: "Descripcion" },
-  { id: "precio", label: "Precio" },
-  { id: "claveSat", label: "Clave SAT" },
+  { id: "rf", label: "RFC" },
+  { id: "nombre", label: "Nombre" },
+  { id: "correo", label: "Correo" },
+  { id: "codigopostal", label: "Codigo Postal" },
 ];
 
-export default function Products({
-  setOpenProducts,
-  productosVenta,
-  setProductosVenta,
-}) {
-  const [productos, setProductos] = useState([]);
+export default function Customers({ setCliente, setOpenPopup }) {
+  const [clientes, setClientes] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const pages = [5, 10, 25];
+  const [page, setPage] = useState(0);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
   const classes = useStyles();
+  const [filterFn, setFilterFn] = useState({
+    fn: (items) => {
+      return items;
+    },
+  });
 
   useEffect(() => {
     const obtenerProductos = async () => {
-      const { data } = await axios.get("http://localhost:4000/api/");
-      setProductos(data);
+      const { data } = await axios.get("http://localhost:4000/api/clientes/");
+      setClientes(data);
       setRefresh(false);
     };
 
     obtenerProductos();
   }, [refresh]);
 
-  const { TblContainer } = useTable(headCells);
-  const handleSortRequest = (cellId) => {
-    const isAsc = orderBy === cellId && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(cellId);
-  };
+  const { TblContainer, TblHead, TblPagination } = useTable(
+    headCells,
+    filterFn
+  );
 
   const handleSearch = async (e) => {
     let target = e.target.value;
     if (target === "") {
       setRefresh(true);
     } else {
-      const { data } = await axios.post("http://localhost:4000/api/like", {
-        target: target,
-      });
-      setProductos(data);
+      console.log(target);
+      const { data } = await axios.post(
+        "http://localhost:4000/api/like/clientes",
+        {
+          target: target,
+        }
+      );
+      setClientes(data);
     }
+  };
+
+  const handleSortRequest = (cellId) => {
+    const isAsc = orderBy === cellId && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(cellId);
   };
 
   const handleClick = (item) => {
-    //Revisa si elemento existe en carrito
-    console.log(item);
-
-    const existe = productosVenta.some(
-      (articulo) => articulo.idProducto === item.idProducto
-    );
-
-    if (existe) {
-      const products = productosVenta.map((articulo) => {
-        if (articulo.idProducto === item.idProducto) {
-          console.log("Existe");
-          articulo.cantidad++;
-          return articulo;
-        } else {
-          return articulo;
-        }
-      });
-
-      setProductosVenta(products);
-    } else {
-      item.cantidad = 1;
-      setProductosVenta([...productosVenta, item]);
-    }
-    setOpenProducts(false);
+    setCliente(item);
+    setOpenPopup(false);
   };
-
-  //document.querySelector('#search').focus();
 
   return (
     <>
       <Toolbar>
         <Controls.Input
-          label="Buscar Producto"
-          id="search"
-          autoFocus
+          label="Buscar Cliente"
           className={classes.searchInput}
+          autoFocus
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -127,7 +114,6 @@ export default function Products({
           onChange={handleSearch}
         />
       </Toolbar>
-
       <TblContainer>
         <TableHead>
           <TableRow>
@@ -154,12 +140,12 @@ export default function Products({
           </TableRow>
         </TableHead>
         <TableBody>
-          {productos.map((item) => (
-            <TableRow key={item.idProducto} onClick={() => handleClick(item)}>
-              <TableCell>{item.idProducto}</TableCell>
-              <TableCell>{item.descripcion}</TableCell>
-              <TableCell>$ {item.precio.toFixed(2)}</TableCell>
-              <TableCell>{item.claveSat}</TableCell>
+          {clientes.map((item) => (
+            <TableRow key={item.idCliente} onClick={() => handleClick(item)}>
+              <TableCell>{item.idCliente}</TableCell>
+              <TableCell>{item.nombre}</TableCell>
+              <TableCell>{item.correo}</TableCell>
+              <TableCell>{item.codigoPostal}</TableCell>
             </TableRow>
           ))}
         </TableBody>

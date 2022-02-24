@@ -61,7 +61,10 @@ export default function Products({
     obtenerProductos();
   }, [refresh]);
 
-  const { TblContainer } = useTable(headCells);
+
+  const { TblContainer, TblHead, TblPagination } = useTable(
+    headCells
+  );
   const handleSortRequest = (cellId) => {
     const isAsc = orderBy === cellId && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -81,42 +84,18 @@ export default function Products({
   };
 
   const handleClick = (item) => {
-    //Revisa si elemento existe en carrito
-    console.log(item);
-
-    const existe = productosVenta.some(
-      (articulo) => articulo.idProducto === item.idProducto
-    );
-
-    if (existe) {
-      const products = productosVenta.map((articulo) => {
-        if (articulo.idProducto === item.idProducto) {
-          console.log("Existe");
-          articulo.cantidad++;
-          return articulo;
-        } else {
-          return articulo;
-        }
-      });
-
-      setProductosVenta(products);
-    } else {
-      item.cantidad = 1;
-      setProductosVenta([...productosVenta, item]);
-    }
+    item.cantidad = 1;
+    setProductosVenta([...productosVenta, item]);
     setOpenProducts(false);
   };
-
-  //document.querySelector('#search').focus();
 
   return (
     <>
       <Toolbar>
         <Controls.Input
           label="Buscar Producto"
-          id="search"
-          autoFocus
           className={classes.searchInput}
+          autoFocus
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -127,7 +106,6 @@ export default function Products({
           onChange={handleSearch}
         />
       </Toolbar>
-
       <TblContainer>
         <TableHead>
           <TableRow>

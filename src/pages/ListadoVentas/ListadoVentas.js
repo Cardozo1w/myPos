@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { DataContext } from "../../context/DataContext";
 import {
   TableHead,
   TableRow,
   TableCell,
   TableSortLabel,
 } from "@material-ui/core";
-import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
+import FormatListBulletedOutlinedIcon from '@material-ui/icons/FormatListBulletedOutlined';
 import {
   Paper,
   makeStyles,
@@ -13,6 +14,7 @@ import {
   Toolbar,
   InputAdornment,
 } from "@material-ui/core";
+
 import useTable from "../../components/useTable";
 //import * as employeeService from "../../services/employeeService";
 import Controls from "../../components/controls/Controls";
@@ -20,15 +22,16 @@ import { Search } from "@material-ui/icons";
 import axios from "axios";
 import { useEffect } from "react";
 import Sales from "./Ventas/Sales";
-import PageHeader from '../../components/PageHeader'
+import PageHeader from "../../components/PageHeader";
 import Popup from "../../components/Popup";
-import { AiFillPrinter } from 'react-icons/ai';
-const ipcRenderer = window.ipcRenderer;
+import { AiFillPrinter } from "react-icons/ai";
+import { useForm, Form } from "../../components/useForm";
 
+const ipcRenderer = window.ipcRenderer;
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    margin: theme.spacing(5),
+    margin: 20,
     padding: theme.spacing(3),
   },
   searchInput: {
@@ -45,10 +48,12 @@ const headCells = [
   { id: "cliente", label: "Cliente" },
   { id: "fecha", label: "Fecha" },
   { id: "total", label: "Total" },
-  { id: "acciones", label: "Acciones" }
+  { id: "acciones", label: "Acciones" },
 ];
 
 export default function ListadoVentas() {
+  const { parsearFecha } = useContext(DataContext);
+
   const [cotizaciones, setCotizaciones] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [order, setOrder] = useState();
@@ -57,7 +62,11 @@ export default function ListadoVentas() {
 
   useEffect(() => {
     const obtenerVentas = async () => {
-      const { data } = await axios.get("http://localhost:4000/api/ventas");
+      const { data } = await axios.post("http://localhost:4000/api/ventas", {
+        fechaInicial: values.fechaInicial,
+        fechaFinal: values.fechaFinal,
+      });
+      console.log(data);
       setCotizaciones(data);
       setRefresh(false);
     };
@@ -67,9 +76,7 @@ export default function ListadoVentas() {
 
   const [openPopup, setOpenPopup] = useState(false);
 
-  const { TblContainer } = useTable(
-    headCells
-  );
+  const { TblContainer } = useTable(headCells);
 
   const handleSearch = async (e) => {
     // let target = e.target.value;
@@ -84,6 +91,22 @@ export default function ListadoVentas() {
     // }
   };
 
+  const initialFValues = {
+    fechaInicial: new Date(),
+    fechaFinal: new Date(),
+  };
+
+  const validate = (fieldValues = values) => {
+    let temp = { ...errors };
+    setErrors({
+      ...temp,
+    });
+
+    if (fieldValues == values) return Object.values(temp).every((x) => x == "");
+  };
+
+  const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
+    useForm(initialFValues, true, validate);
 
   const handleSortRequest = (cellId) => {
     const isAsc = orderBy === cellId && order === "asc";
@@ -92,109 +115,108 @@ export default function ListadoVentas() {
   };
 
   const [productosVenta, setProductos] = useState([]);
-  const [folio, setFolio] = useState(null)
+  const [folio, setFolio] = useState(null);
 
-
-  const verVenta = async (
-    folioVenta
-  ) => {
+  const verVenta = async (folioVenta) => {
     const { data } = await axios.get(
       `http://localhost:4000/api/venta/${folioVenta}`
-    )
-    setFolio(folioVenta)
+    );
+    setFolio(folioVenta);
     setProductos(data);
     setOpenPopup(true);
   };
 
   const printData = (args) => {
-    console.log('Intentando imprimir...')
-    ipcRenderer.send('print', JSON.stringify(args))
-  }
+    console.log("Intentando imprimir...");
+    ipcRenderer.send("print", JSON.stringify(args));
+  };
 
   const reImprimir = async (folioReceipt, fecha, totalReceipt) => {
     const { data } = await axios.get(
       `http://localhost:4000/api/venta/${folioReceipt}`
-    )
-    const meses = [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
-    ];
-    const dias_semana = [
-      "Domingo",
-      "Lunes",
-      "Martes",
-      "Miércoles",
-      "Jueves",
-      "Viernes",
-      "Sábado",
-    ];
-    var date = new Date(fecha);
-    const hoy =
-      dias_semana[date.getDay()] +
-      ", " +
-      date.getDate() +
-      " de " +
-      meses[date.getMonth()] +
-      " de " +
-      date.getUTCFullYear();
+    );
 
-
-
+    const hoy = parsearFecha(fecha);
     let productosNota = [];
     let arrayRandom = [];
 
-    data.map(item => {
+    data.map((item) => {
       arrayRandom = [];
-      arrayRandom.push(`(${item.idProducto}) ${item.descripcion}`)
-      arrayRandom.push(parseFloat(item.cantidad).toFixed(2))
-      arrayRandom.push(parseFloat(item.precio).toFixed(2))
-      arrayRandom.push((parseFloat(item.cantidad) * parseFloat(item.precio)).toFixed(2))
-      console.log(arrayRandom)
-      productosNota.push(arrayRandom)
-      arrayRandom = []
-    })
+      arrayRandom.push(`(${item.idProducto}) ${item.descripcion}`);
+      arrayRandom.push(parseFloat(item.cantidad).toFixed(2));
+      arrayRandom.push(parseFloat(item.precio).toFixed(2));
+      arrayRandom.push(
+        (parseFloat(item.cantidad) * parseFloat(item.precio)).toFixed(2)
+      );
+      productosNota.push(arrayRandom);
+      arrayRandom = [];
+    });
 
-    printData({ folio: folioReceipt, productosNota, hoy, total: parseFloat(totalReceipt) });
-    //console.log(productosNota);
-    // console.log({ folio: folioReceipt, productosNota, hoy, totalReceipt })
+    // printData({
+    //   folio: folioReceipt,
+    //   productosNota,
+    //   hoy,
+    //   total: parseFloat(totalReceipt),
+    // });
   };
 
-
-
+  const aplicarFiltro = async () => {
+    console.log("Fecha Inicial: " + values.fechaInicial);
+    console.log("Fecha Final: " + values.fechaFinal);
+    const { data } = await axios.post("http://localhost:4000/api/ventas", {
+      fechaInicial: values.fechaInicial,
+      fechaFinal: values.fechaFinal,
+    });
+    setCotizaciones(data);
+  };
 
   return (
     <>
       <PageHeader
-        title="Cotizaciones"
-        subTitle="Listado de Cotizaciones"
-        icon={<PeopleOutlineTwoToneIcon fontSize="large" />}
+        title="Ventas"
+        subTitle="Listado de Ventas"
+        icon={<FormatListBulletedOutlinedIcon fontSize="large" />}
       />
-      <Paper className={classes.pageContent}>
-        <Toolbar>
-          <Controls.Input
-            label="Buscar Nota de Venta"
-            className={classes.searchInput}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-            onChange={handleSearch}
-          />
 
-        </Toolbar>
+      <Paper className={classes.pageContent}>
+        <p>Filtrar por fecha</p>
+        <div style={{ display: "flex" }}>
+          <Controls.DatePicker
+            name="fechaInicial"
+            label="Fecha Inicial"
+            value={values.fechaInicial}
+            onChange={handleInputChange}
+          />
+          <div
+            style={{
+              marginLeft: 20,
+            }}
+          >
+            <Controls.DatePicker
+              name="fechaFinal"
+              label="Fecha Final"
+              value={values.fechaFinal}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <Controls.Button
+            style={{
+              height: "56px",
+              width: "200px",
+              margin: 0,
+              marginLeft: 20,
+            }}
+            text="Aplicar Filtro"
+            variant="outlined"
+            className=""
+            onClick={() => {
+              aplicarFiltro();
+            }}
+          />
+        </div>
+      </Paper>
+      <Paper className={classes.pageContent}>
         <div className="overflow">
           <TblContainer>
             <TableHead>
@@ -233,14 +255,16 @@ export default function ListadoVentas() {
                   <TableCell>Mostrador</TableCell>
                   <TableCell>{item.fecha.substring(0, 10)}</TableCell>
                   <TableCell>$ {item.total.toFixed(2)}</TableCell>
-                  <TableCell><Controls.ActionButton
-                    color="primary"
-                    onClick={() => {
-                      reImprimir(item.folio, item.fecha, item.total)
-                    }}
-                  >
-                    <AiFillPrinter style={{ width: 20, height: 20 }} />
-                  </Controls.ActionButton></TableCell>
+                  <TableCell>
+                    <Controls.ActionButton
+                      color="primary"
+                      onClick={() => {
+                        reImprimir(item.folio, item.fecha, item.total);
+                      }}
+                    >
+                      <AiFillPrinter style={{ width: 20, height: 20 }} />
+                    </Controls.ActionButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

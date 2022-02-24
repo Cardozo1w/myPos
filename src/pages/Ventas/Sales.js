@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PageHeader from "../../components/PageHeader";
-import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
+import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
 import { Paper, makeStyles } from "@material-ui/core";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
@@ -12,7 +12,7 @@ const ipcRenderer = window.ipcRenderer;
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    margin: theme.spacing(5),
+    margin: 20,
     padding: theme.spacing(3),
   },
   searchInput: {
@@ -86,9 +86,9 @@ export default function Sales() {
     fecha.getUTCFullYear();
 
   const printData = (args) => {
-    console.log('Intentando imprimir...')
-    ipcRenderer.send('print', JSON.stringify(args))
-  }
+    console.log("Intentando imprimir...");
+    ipcRenderer.send("print", JSON.stringify(args));
+  };
 
   const generarVenta = async () => {
     try {
@@ -102,39 +102,33 @@ export default function Sales() {
       );
       let productosNota = [];
       let arrayRandom = [];
-      if (ventaNueva.status === 200) {
+      productosVenta.map((item) => {
+        arrayRandom = [];
+        arrayRandom.push(`(${item.idProducto}) ${item.descripcion}`);
+        arrayRandom.push(parseFloat(item.cantidad).toFixed(2));
+        arrayRandom.push(parseFloat(item.precio).toFixed(2));
+        arrayRandom.push(
+          (parseFloat(item.cantidad) * parseFloat(item.precio)).toFixed(2)
+        );
+        productosNota.push(arrayRandom);
+        arrayRandom = [];
+      });
 
-
-        productosVenta.map(item => {
-          arrayRandom = [];
-          arrayRandom.push(`(${item.idProducto}) ${item.descripcion}`)
-          arrayRandom.push(parseFloat(item.cantidad).toFixed(2))
-          arrayRandom.push(parseFloat(item.precio).toFixed(2))
-          arrayRandom.push((parseFloat(item.cantidad) * parseFloat(item.precio)).toFixed(2))
-          productosNota.push(arrayRandom)
-          arrayRandom = []
-        })
-
-        printData({ folio: ventaNueva.data.folio, productosNota, hoy, total });
-        setProductosVenta([]);
-        productosNota = [];
-      }
+      //printData({ folio: ventaNueva.data.folio, productosNota, hoy, total });
+      setProductosVenta([]);
+      productosNota = [];
     } catch (error) {
       console.log(error);
     }
-
   };
-
-
 
   return (
     <>
       <PageHeader
         title="Nota de Venta"
         subTitle="Generar Nota de Venta"
-        icon={<PeopleOutlineTwoToneIcon fontSize="large" />}
+        icon={<ShoppingCartOutlinedIcon fontSize="large" />}
       />
-
 
       <Paper className={classes.pageContent}>
         <Controls.Button
@@ -156,7 +150,6 @@ export default function Sales() {
           onClick={() => {
             generarVenta();
           }}
-
         />
         <div className="overflow">
           <SaleTable
@@ -175,10 +168,10 @@ export default function Sales() {
         </p>
       </Paper>
 
-
       <Popup
         title="Buscar Producto"
-        openPopup={openProducts} op
+        openPopup={openProducts}
+        op
         setOpenPopup={setOpenProducts}
       >
         <Products
@@ -187,8 +180,6 @@ export default function Sales() {
           productosVenta={productosVenta}
         />
       </Popup>
-
-
     </>
   );
 }

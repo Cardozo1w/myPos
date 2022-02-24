@@ -1,11 +1,9 @@
 import React from "react";
 import "./App.css";
-import {
-  createMuiTheme,
-  ThemeProvider,
-} from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 
 import Main from "../pages/main";
+import { DataProvider } from "../context/DataContext";
 
 const theme = createMuiTheme({
   palette: {
@@ -38,7 +36,9 @@ const theme = createMuiTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-     <Main />
+      <DataProvider>
+        <Main />
+      </DataProvider>
     </ThemeProvider>
   );
 }

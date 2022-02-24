@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import { PDFViewer } from "@react-pdf/renderer";
 import PageHeader from "../../components/PageHeader";
-import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
+import FormatListBulletedOutlinedIcon from "@material-ui/icons/FormatListBulletedOutlined";
 import {
   Paper,
   makeStyles,
@@ -23,10 +23,12 @@ import Popup from "../../components/Popup";
 import axios from "axios";
 import { useEffect } from "react";
 import Cotizacionpdf from "../../components/pdf/cotizacionLista";
+import { useForm, Form } from "../../components/useForm";
+
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    margin: theme.spacing(5),
+    margin: 20,
     padding: theme.spacing(3),
   },
   searchInput: {
@@ -51,11 +53,10 @@ export default function ListadoCotizaciones() {
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
   const classes = useStyles();
-  
 
   useEffect(() => {
     const obtenerProductos = async () => {
-      const { data } = await axios.get("http://localhost:4000/api/cotizacion");
+      const { data } = await axios.post("http://localhost:4000/api/cotizacion");
       setCotizaciones(data);
       setRefresh(false);
     };
@@ -65,22 +66,8 @@ export default function ListadoCotizaciones() {
 
   const [openPopup, setOpenPopup] = useState(false);
 
-  const { TblContainer } = useTable(
-    headCells
-  );
+  const { TblContainer } = useTable(headCells);
 
-  const handleSearch = async (e) => {
-    // let target = e.target.value;
-    // if (target === "") {
-    //   setRefresh(true);
-    // } else {
-    //   console.log(target);
-    //   const { data } = await axios.post("http://localhost:4000/api/like/", {
-    //     target: target,
-    //   });
-    //   setCotizaciones(data);
-    // }
-  };
   const handleSortRequest = (cellId) => {
     const isAsc = orderBy === cellId && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -116,28 +103,80 @@ export default function ListadoCotizaciones() {
     setOpenPopup(true);
   };
 
+  const initialFValues = {
+    fechaInicial: new Date(),
+    fechaFinal: new Date(),
+  };
+
+  const validate = (fieldValues = values) => {
+    let temp = { ...errors };
+    setErrors({
+      ...temp,
+    });
+
+    if (fieldValues == values) return Object.values(temp).every((x) => x == "");
+  };
+
+  const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
+    useForm(initialFValues, true, validate);
+
+  const aplicarFiltro = async () => {
+    console.log("Fecha Inicial: " + values.fechaInicial);
+    console.log("Fecha Final: " + values.fechaFinal);
+    const { data } = await axios.post("http://localhost:4000/api/cotizacion", {
+      fechaInicial: values.fechaInicial,
+      fechaFinal: values.fechaFinal,
+    });
+    setCotizaciones(data);
+  };
+
   return (
     <>
       <PageHeader
         title="Cotizaciones"
         subTitle="Listado de Cotizaciones"
-        icon={<PeopleOutlineTwoToneIcon fontSize="large" />}
+        icon={<FormatListBulletedOutlinedIcon fontSize="large" />}
       />
+
       <Paper className={classes.pageContent}>
-        <Toolbar>
-          <Controls.Input
-            label="Buscar Cotizacion"
-            className={classes.searchInput}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-            onChange={handleSearch}
+        <p>Filtrar por fecha</p>
+        <div style={{ display: "flex" }}>
+          <Controls.DatePicker
+            name="fechaInicial"
+            label="Fecha Inicial"
+            value={values.fechaInicial}
+            onChange={handleInputChange}
           />
-        </Toolbar>
+          <div
+            style={{
+              marginLeft: 20,
+            }}
+          >
+            <Controls.DatePicker
+              name="fechaFinal"
+              label="Fecha Final"
+              value={values.fechaFinal}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <Controls.Button
+            style={{
+              height: "56px",
+              width: "200px",
+              margin: 0,
+              marginLeft: 20,
+            }}
+            text="Aplicar Filtro"
+            variant="outlined"
+            className=""
+            onClick={() => {
+              aplicarFiltro();
+            }}
+          />
+        </div>
+      </Paper>
+      <Paper className={classes.pageContent}>
         <div className="overflow">
           <TblContainer>
             <TableHead>

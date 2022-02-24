@@ -8,7 +8,7 @@ import {
 
 import ProductForm from "./ProductForm";
 import PageHeader from "../../components/PageHeader";
-import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
+import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
 import {
   Paper,
   makeStyles,
@@ -132,7 +132,7 @@ export default function Products() {
       <PageHeader
         title="Productos"
         subTitle="Formulario de Productos"
-        icon={<PeopleOutlineTwoToneIcon fontSize="large" />}
+        icon={<AssignmentOutlinedIcon fontSize="large" />}
       />
       <Paper className={classes.pageContent}>
         <Toolbar>

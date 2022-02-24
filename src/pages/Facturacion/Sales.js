@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Customers from "./Customers";
-import { PDFViewer } from "@react-pdf/renderer";
 import PageHeader from "../../components/PageHeader";
-import ReceiptOutlinedIcon from '@material-ui/icons/ReceiptOutlined';
 import { Paper, makeStyles, Toolbar, InputAdornment } from "@material-ui/core";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
@@ -10,15 +8,20 @@ import Popup from "../../components/Popup";
 import axios from "axios";
 import SaleTable from "./saleTable";
 import Products from "./Products";
-import Cotizacionpdf from "../../components/pdf/cotizacion";
+import { DataContext } from "../../context/DataContext";
+import DescriptionIcon from '@material-ui/icons/Description';
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    margin: 20,
-    padding: theme.spacing(3),
+    margin: 10,
+    padding: 20,
   },
   searchInput: {
     width: "70%",
+  },
+  select: {
+    width: "30%",
+    marginLeft: 20,
   },
   newButton: {
     position: "absolute",
@@ -26,10 +29,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Sales() {
+export default function Facturacion() {
+  const { generarToken, crearFactura } = useContext(DataContext);
+
   const [openPopup, setOpenPopup] = useState(false);
   const [openProducts, setOpenProducts] = useState(false);
-
   const [folio, setFolio] = useState(null);
   const [abrirCotizacion, setAbrirCotizacion] = useState(false);
   const [productosVenta, setProductosVenta] = useState([]);
@@ -58,33 +62,24 @@ export default function Sales() {
   today = mm + "/" + dd + "/" + yyyy;
 
   const generarCotizacion = async () => {
-    const { data } = await axios.post(
-      "http://localhost:4000/api/cotizacion/insertar",
-      {
-        idCliente: cliente.idCliente,
-        fecha: today,
-        total: total,
+    //TO-DO
+    //Generar Token
+    const token = await generarToken();
+    crearFactura(cliente);
 
-        productos: productosVenta,
-      }
-    );
-
-    setFolio(data.folio);
-    setAbrirCotizacion(true);
-    document.getElementById("cliente").value = "";
+    //Generar CFDI
   };
 
   return (
     <>
       <PageHeader
-        title="Cotizaciones"
-        subTitle="Generar Cotizacion"
-        icon={<ReceiptOutlinedIcon fontSize="large" />}
+        title="Facturacion"
+        subTitle="Generar Factura"
+        icon={<DescriptionIcon fontSize="large" />}
       />
       <Paper className={classes.pageContent}>
-        <Toolbar>
+        <Toolbar style={{ marginBottom: 30 }}>
           <Controls.Input
-            id="cliente"
             label="Cliente"
             className={classes.searchInput}
             disabled={true}
@@ -114,6 +109,35 @@ export default function Sales() {
               }
             }}
           />
+        </Toolbar>
+        {/* </Paper>
+
+      <Paper className={classes.pageContent}> */}
+        <Toolbar>
+          <Controls.Input
+            label="Uso CFDI"
+            value="G03"
+            variant="outlined"
+            onClick={() => console.log("Buscando...")}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  {/* <Search /> */}
+                </InputAdornment>
+              ),
+            }}
+          />
+          <div style={{ marginLeft: 20 }}>
+            <Controls.Select
+              name="metodoPago"
+              value="PUE"
+              //onChange={handleInputChange}
+              options={[
+                { id: "PUE", title: "PUE" },
+                { id: "2", title: "PPD" },
+              ]}
+            />
+          </div>
         </Toolbar>
       </Paper>
 
@@ -184,24 +208,7 @@ export default function Sales() {
         openPopup={abrirCotizacion}
         setOpenPopup={setAbrirCotizacion}
         title="Cotizacion"
-      >
-        {cliente ? (
-          <>
-            <PDFViewer style={{ width: "800px", height: "90vh" }}>
-              <Cotizacionpdf
-                customer={cliente}
-                productos={productosVenta}
-                total={total}
-                folio={folio}
-                setFolio={setFolio}
-                setProductosVenta={setProductosVenta}
-                setCliente={setCliente}
-                setTotal={setTotal}
-              />
-            </PDFViewer>
-          </>
-        ) : null}
-      </Popup>
+      ></Popup>
     </>
   );
 }
