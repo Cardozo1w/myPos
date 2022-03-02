@@ -23,12 +23,14 @@
     "electron-is-dev": "^2.0.0",
     "electron-pos-printer": "^1.2.0",
     "electron-printer": "^0.0.5",
+    "material-design-icons": "^3.0.1",
+    "pdf-viewer-reactjs": "^2.2.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^4.3.1",
     "react-router-dom": "^5.3.0",
     "react-scripts": "3.4.1",
-    "sweetalert2": "^11.3.0",
+    "sweetalert2": "^11.4.4",
     "typescript": "^3.9.10"
   },
   "scripts": {

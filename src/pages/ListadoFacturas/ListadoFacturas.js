@@ -1,13 +1,14 @@
 import React, { useState, useContext } from "react";
 import { DataContext } from "../../context/DataContext";
+import Swal from "sweetalert2";
 import {
   TableHead,
   TableRow,
   TableCell,
   TableSortLabel,
 } from "@material-ui/core";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 import FormatListBulletedOutlinedIcon from "@material-ui/icons/FormatListBulletedOutlined";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import {
   Paper,
   makeStyles,
@@ -47,15 +48,16 @@ const useStyles = makeStyles((theme) => ({
 const headCells = [
   { id: "id", label: "Folio" },
   { id: "cliente", label: "Cliente" },
+  { id: "uuid", label: "UUID" },
   { id: "fecha", label: "Fecha" },
   { id: "total", label: "Total" },
   { id: "acciones", label: "Acciones" },
 ];
 
-export default function ListadoVentas() {
-  const { parsearFecha } = useContext(DataContext);
+export default function ListadoFacturas() {
+  const { generarToken } = useContext(DataContext);
 
-  const [cotizaciones, setCotizaciones] = useState([]);
+  const [facturas, setFacturas] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
@@ -63,12 +65,11 @@ export default function ListadoVentas() {
 
   useEffect(() => {
     const obtenerVentas = async () => {
-      const { data } = await axios.post("http://localhost:4000/api/ventas", {
+      const { data } = await axios.post("http://localhost:4000/api/facturas", {
         fechaInicial: values.fechaInicial,
         fechaFinal: values.fechaFinal,
       });
-      console.log(data);
-      setCotizaciones(data);
+      setFacturas(data);
       setRefresh(false);
     };
 
@@ -78,19 +79,6 @@ export default function ListadoVentas() {
   const [openPopup, setOpenPopup] = useState(false);
 
   const { TblContainer } = useTable(headCells);
-
-  const handleSearch = async (e) => {
-    // let target = e.target.value;
-    // if (target === "") {
-    //   setRefresh(true);
-    // } else {
-    //   console.log(target);
-    //   const { data } = await axios.post("http://localhost:4000/api/like/", {
-    //     target: target,
-    //   });
-    //   setCotizaciones(data);
-    // }
-  };
 
   const initialFValues = {
     fechaInicial: new Date(),
@@ -127,55 +115,46 @@ export default function ListadoVentas() {
     setOpenPopup(true);
   };
 
-  const printData = (args) => {
-    console.log("Intentando imprimir...");
-    ipcRenderer.send("print", JSON.stringify(args));
-  };
-
-  const reImprimir = async (folioReceipt, fecha, totalReceipt) => {
-    const { data } = await axios.get(
-      `http://localhost:4000/api/venta/${folioReceipt}`
-    );
-
-    const hoy = parsearFecha(fecha);
-    let productosNota = [];
-    let arrayRandom = [];
-
-    data.map((item) => {
-      arrayRandom = [];
-      arrayRandom.push(`(${item.idProducto}) ${item.descripcion}`);
-      arrayRandom.push(parseFloat(item.cantidad).toFixed(2));
-      arrayRandom.push(parseFloat(item.precio).toFixed(2));
-      arrayRandom.push(
-        (parseFloat(item.cantidad) * parseFloat(item.precio)).toFixed(2)
-      );
-      productosNota.push(arrayRandom);
-      arrayRandom = [];
-    });
-
-    // printData({
-    //   folio: folioReceipt,
-    //   productosNota,
-    //   hoy,
-    //   total: parseFloat(totalReceipt),
-    // });
-  };
-
   const aplicarFiltro = async () => {
     console.log("Fecha Inicial: " + values.fechaInicial);
     console.log("Fecha Final: " + values.fechaFinal);
-    const { data } = await axios.post("http://localhost:4000/api/ventas", {
+    const { data } = await axios.post("http://localhost:4000/api/facturas", {
       fechaInicial: values.fechaInicial,
       fechaFinal: values.fechaFinal,
     });
-    setCotizaciones(data);
+    setFacturas(data);
+  };
+
+  const obtenerFactura = async (uuid) => {
+    const token = await generarToken();
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const pdfComprobante = await axios.get(
+        `https://emision-api.facturador.com/api/v1/emisores/3280/comprobantes/${uuid}/pdf`,
+        {
+          headers: headers,
+        }
+      );
+      window.open(pdfComprobante.data, uuid, "resizable");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        html: "Error al obtener el pdf",
+        // footer: '<a href="">Why do I have this issue?</a>'
+      });
+    }
   };
 
   return (
     <>
       <PageHeader
-        title="Ventas"
-        subTitle="Listado de Ventas"
+        title="Facturas"
+        subTitle="Listado de Facturas"
         icon={<FormatListBulletedOutlinedIcon fontSize="large" />}
       />
 
@@ -245,28 +224,21 @@ export default function ListadoVentas() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {cotizaciones.map((item) => (
+              {facturas.map((item) => (
                 <TableRow key={item.folio}>
                   <TableCell>{item.folio}</TableCell>
-                  <TableCell>Mostrador</TableCell>
+                  <TableCell>{item.rfc}</TableCell>
+                  <TableCell>{item.uuid}</TableCell>
                   <TableCell>{item.fecha.substring(0, 10)}</TableCell>
                   <TableCell>$ {item.total.toFixed(2)}</TableCell>
                   <TableCell>
                     <Controls.ActionButton
                       color="primary"
                       onClick={() => {
-                        verVenta(item.folio);
+                        obtenerFactura(item.uuid);
                       }}
                     >
                       <VisibilityIcon style={{ width: 20, height: 20 }} />
-                    </Controls.ActionButton>
-                    <Controls.ActionButton
-                      color="primary"
-                      onClick={() => {
-                        reImprimir(item.folio, item.fecha, item.total);
-                      }}
-                    >
-                      <AiFillPrinter style={{ width: 20, height: 20 }} />
                     </Controls.ActionButton>
                   </TableCell>
                 </TableRow>

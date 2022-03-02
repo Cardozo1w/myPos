@@ -9,7 +9,10 @@ import axios from "axios";
 import SaleTable from "./saleTable";
 import Products from "./Products";
 import { DataContext } from "../../context/DataContext";
-import DescriptionIcon from '@material-ui/icons/Description';
+import DescriptionIcon from "@material-ui/icons/Description";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FormaPagoComponent from "./catalogosSAT/formaPago";
+import UsoCFDI from "./catalogosSAT/usoCfdi";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -30,8 +33,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Facturacion() {
-  const { generarToken, crearFactura } = useContext(DataContext);
-
+  const { generarToken, crearFactura, loading, setLoading } =
+    useContext(DataContext);
+  const [abrirUsoCFDI, setAbrirUsoCFDI] = useState(false);
+  const [abrirFormaPago, setAbrirFormaPago] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [openProducts, setOpenProducts] = useState(false);
   const [folio, setFolio] = useState(null);
@@ -42,6 +47,15 @@ export default function Facturacion() {
     idCliente: "",
   });
   const [total, setTotal] = useState(0);
+  const [metodoPago, setMetodoPago] = useState("PUE");
+  const [formaPago, setFormaPago] = useState({
+    id: "01",
+    descripcion: "Efectivo",
+  });
+  const [usoCFDI, setUsoCFDI] = useState({
+    id: "G03",
+    descripcion: "Gastos en general",
+  });
 
   const classes = useStyles();
 
@@ -61,11 +75,28 @@ export default function Facturacion() {
 
   today = mm + "/" + dd + "/" + yyyy;
 
+  const metodoChange = (e) => {
+    setMetodoPago(e.target.value);
+  };
+
   const generarCotizacion = async () => {
     //TO-DO
+    setLoading(true);
+    const reiniciarFactura = () => {
+      window.location.reload();
+    }
     //Generar Token
     const token = await generarToken();
-    crearFactura(cliente);
+    crearFactura(
+      cliente,
+      productosVenta,
+      total,
+      token,
+      usoCFDI,
+      formaPago,
+      metodoPago,
+      reiniciarFactura
+    );
 
     //Generar CFDI
   };
@@ -114,54 +145,92 @@ export default function Facturacion() {
 
       <Paper className={classes.pageContent}> */}
         <Toolbar>
-          <Controls.Input
-            label="Uso CFDI"
-            value="G03"
-            variant="outlined"
-            onClick={() => console.log("Buscando...")}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  {/* <Search /> */}
-                </InputAdornment>
-              ),
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "50%",
             }}
-          />
-          <div style={{ marginLeft: 20 }}>
+          >
+            <Controls.Input
+              label="Uso CFDI"
+              value={usoCFDI.id}
+              variant="outlined"
+              onClick={() => setAbrirUsoCFDI(true)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    {/* <Search /> */}
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Controls.Input
+              label="Forma de pago"
+              value={formaPago.id}
+              variant="outlined"
+              onClick={() => setAbrirFormaPago(true)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    {/* <Search /> */}
+                  </InputAdornment>
+                ),
+              }}
+            />
+
             <Controls.Select
               name="metodoPago"
-              value="PUE"
               //onChange={handleInputChange}
+              value={metodoPago}
               options={[
                 { id: "PUE", title: "PUE" },
-                { id: "2", title: "PPD" },
+                { id: "PPD", title: "PPD" },
               ]}
+              onChange={(e) => metodoChange(e)}
             />
           </div>
         </Toolbar>
       </Paper>
 
       <Paper className={classes.pageContent}>
-        <Controls.Button
-          style={{ height: "56px", width: "200px" }}
-          text="Agregar Producto"
-          variant="outlined"
-          startIcon={<Search />}
-          className=""
-          onClick={() => {
-            setOpenProducts(true);
-          }}
-        />
-        <Controls.Button
-          style={{ height: "56px", width: "200px" }}
-          text="Generar Cotizacion"
-          variant="outlined"
-          className=""
-          disabled={productosVenta.length === 0}
-          onClick={() => {
-            generarCotizacion();
-          }}
-        />
+        <div style={{ display: "flex" }}>
+          <Controls.Button
+            style={{ height: "56px", width: "200px" }}
+            text="Agregar Producto"
+            variant="outlined"
+            startIcon={<Search />}
+            className=""
+            onClick={() => {
+              setOpenProducts(true);
+            }}
+          />
+          {loading ? (
+            <div
+              className="btn-loading"
+              style={{
+                height: "56px",
+                width: "200px",
+                color: "#333996",
+                border: "1px solid rgba(51, 57, 150, 0.5)",
+              }}
+            >
+              <CircularProgress /> Cargando...
+            </div>
+          ) : (
+            <Controls.Button
+              style={{ height: "56px", width: "200px" }}
+              text="Generar Factura"
+              variant="outlined"
+              className=""
+              disabled={productosVenta.length === 0}
+              onClick={() => {
+                generarCotizacion();
+              }}
+            />
+          )}
+        </div>
+
         <div className="overflow">
           <SaleTable
             productosVenta={productosVenta}
@@ -209,6 +278,24 @@ export default function Facturacion() {
         setOpenPopup={setAbrirCotizacion}
         title="Cotizacion"
       ></Popup>
+
+      <Popup
+        openPopup={abrirUsoCFDI}
+        setOpenPopup={setAbrirUsoCFDI}
+        title="Uso CFDI"
+      >
+        <UsoCFDI setUsoCFDI={setUsoCFDI} setAbrirUsoCFDI={setAbrirUsoCFDI} />
+      </Popup>
+      <Popup
+        openPopup={abrirFormaPago}
+        setOpenPopup={setAbrirFormaPago}
+        title="Forma de Pago"
+      >
+        <FormaPagoComponent
+          setFormaPago={setFormaPago}
+          setAbrirFormaPago={setAbrirFormaPago}
+        />
+      </Popup>
     </>
   );
 }

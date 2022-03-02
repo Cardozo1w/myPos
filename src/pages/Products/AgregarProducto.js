@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid } from "@material-ui/core";
 import Controls from "../../components/controls/Controls";
 import { useForm, Form } from "../../components/useForm";
@@ -6,7 +6,6 @@ import * as employeeService from "../../services/employeeService";
 import axios from "axios";
 
 const initialFValues = {
-  idProducto: "",
   descripcion: "",
   precio: "",
   unidad: "PZA",
@@ -15,6 +14,16 @@ const initialFValues = {
 };
 
 export default function AgregarProducto(props) {
+  const obtenerFolio = async () => {
+    const { data } = await axios.get(
+      "http://localhost:4000/api/ultimoproducto"
+    );
+    console.log(data[0].idProducto + 1);
+    values.idProducto = data[0].idProducto + 1;
+  };
+
+  obtenerFolio();
+
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
     if ("idProducto" in fieldValues)
@@ -61,13 +70,6 @@ export default function AgregarProducto(props) {
     <Form onSubmit={handleSubmit}>
       <Grid container>
         <Grid item xs={6}>
-          <Controls.Input
-            name="idProducto"
-            label="Clave"
-            value={values.idProducto}
-            onChange={handleInputChange}
-            error={errors.idProducto}
-          />
           <Controls.Input
             name="descripcion"
             label="Descripcion del Producto"

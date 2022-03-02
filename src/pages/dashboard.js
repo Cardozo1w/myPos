@@ -12,16 +12,38 @@ const Dashboard = () => {
   useEffect(() => {
     const obtenerData = async () => {
       const { data } = await axios.post("http://localhost:4000/api/totales");
+      let ventaDelDia = 0;
+      let ventaDelMes = 0;
+      let ventaDelAnio = 0;
 
       if (data.ventaDia["SUM(total)"] !== null) {
-        setVentaDia(data.ventaDia["SUM(total)"]);
+       // setVentaDia(data.ventaDia["SUM(total)"]);
+        ventaDelDia += data.ventaDia["SUM(total)"]
       }
       if (data.ventaMes["SUM(total)"] !== null) {
-        setVentaMes(data.ventaMes["SUM(total)"]);
+       // setVentaMes(data.ventaMes["SUM(total)"]);
+       ventaDelMes += data.ventaMes["SUM(total)"]
       }
       if (data.ventaAnio["SUM(total)"] !== null) {
-        setVentaAnio(data.ventaAnio["SUM(total)"]);
+        //setVentaAnio(data.ventaAnio["SUM(total)"]);
+        ventaDelAnio += data.ventaAnio["SUM(total)"]
       }
+       if (data.ventaDiaFactura["SUM(total)"] !== null) {
+       // setVentaDia(data.ventaDia["SUM(total)"]);
+        ventaDelDia += data.ventaDiaFactura["SUM(total)"]
+      }
+      if (data.ventaMesFactura["SUM(total)"] !== null) {
+       // setVentaMes(data.ventaMes["SUM(total)"]);
+       ventaDelMes += data.ventaMesFactura["SUM(total)"]
+      }
+      if (data.ventaAnioFactura["SUM(total)"] !== null) {
+        //setVentaAnio(data.ventaAnio["SUM(total)"]);
+        ventaDelAnio += data.ventaAnioFactura["SUM(total)"]
+      }
+
+      setVentaDia(ventaDelDia)
+      setVentaMes(ventaDelMes)
+      setVentaAnio(ventaDelAnio)
     };
 
     obtenerData();

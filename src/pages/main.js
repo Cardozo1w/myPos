@@ -8,10 +8,12 @@ import Cotizaciones from "../pages/Cotizaciones/Sales";
 import ListadoCotizaciones from "./ListadoCotizaciones/ListadoCotizaciones";
 import ListadoVentas from "./ListadoVentas/ListadoVentas";
 import Facturacion from "./Facturacion/Sales";
+import PdfViewer from "./pdfviewer";
 
 import SideMenu from "../components/SideMenu";
 import { makeStyles, CssBaseline } from "@material-ui/core";
 import Dashboard from "./dashboard";
+import ListadoFacturas from "./ListadoFacturas/ListadoFacturas";
 
 const useStyles = makeStyles({
   appMain: {
@@ -33,6 +35,7 @@ const Main = () => {
         {active === "facturacion" && <Facturacion />}
         {active === "sales" && <Sales />}
         {active === "cotizaciones" && <Cotizaciones />}
+        {active === "listadofacturas" && <ListadoFacturas />}
         {active === "listadoventas" && <ListadoVentas />}
         {active === "listadocotizaciones" && <ListadoCotizaciones />}
         {active === "products" && <Products />}

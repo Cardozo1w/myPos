@@ -17,6 +17,7 @@ const style = {
     width: "320px",
     height: "140vh",
     backgroundColor: "#253053",
+    position: 'fixed'
   },
 };
 
@@ -54,6 +55,12 @@ const SideMenu = (props) => {
           setActive={setActive}
           active="cotizaciones"
           icon={<ReceiptOutlinedIcon />}
+        />
+        <MenuItem
+          title="Listado Facturas"
+          setActive={setActive}
+          active="listadofacturas"
+          icon={<FormatListBulletedOutlinedIcon />}
         />
         <MenuItem
           title="Listado Ventas"
