@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { DataContext } from "../../context/DataContext";
+import { FacturaContext } from "../../context/FacturaContext";
 import {
   TableHead,
   TableRow,
@@ -8,6 +9,7 @@ import {
 } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import FormatListBulletedOutlinedIcon from "@material-ui/icons/FormatListBulletedOutlined";
+import DescriptionIcon from "@material-ui/icons/Description";
 import {
   Paper,
   makeStyles,
@@ -52,8 +54,9 @@ const headCells = [
   { id: "acciones", label: "Acciones" },
 ];
 
-export default function ListadoVentas() {
+export default function ListadoVentas({setActive}) {
   const { parsearFecha } = useContext(DataContext);
+  const { setProductosFactura } = useContext(FacturaContext);
 
   const [cotizaciones, setCotizaciones] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -171,6 +174,15 @@ export default function ListadoVentas() {
     setCotizaciones(data);
   };
 
+  const crearFactura = async (folio, fecha, total) => {
+    const { data } = await axios.get(
+      `http://localhost:4000/api/venta/${folio}`
+    );
+    setProductosFactura(data);
+    setActive("facturacion")
+    
+  };
+
   return (
     <>
       <PageHeader
@@ -267,6 +279,14 @@ export default function ListadoVentas() {
                       }}
                     >
                       <AiFillPrinter style={{ width: 20, height: 20 }} />
+                    </Controls.ActionButton>
+                    <Controls.ActionButton
+                      color="primary"
+                      onClick={() => {
+                        crearFactura(item.folio, item.fecha, item.total);
+                      }}
+                    >
+                      <DescriptionIcon style={{ width: 20, height: 20 }} />
                     </Controls.ActionButton>
                   </TableCell>
                 </TableRow>

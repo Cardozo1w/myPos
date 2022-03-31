@@ -1,6 +1,7 @@
 import React, { createContext, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Decimal from "decimal.js-light";
 
 export const DataContext = createContext();
 
@@ -42,15 +43,14 @@ const parsearFecha = (fecha) => {
 };
 
 export const DataProvider = ({ children }) => {
-  //const [dataFactura, setDataFactura] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const generarToken = async () => {
     try {
       const grant =
-        "grant_type=password&scope=offline_access+openid+APINegocios+&username=RULV690623SM4&password=538deff0ae5b17ab11f413ccf32e5ee3&client_id=client_RULV690623SM4&client_secret=584C3DA5-B119-438E-B634-F5C9D114D0E9&es_md5=true";
+        "grant_type=password&scope=offline_access+openid+APINegocios+&username=GOYA780416GM0&password=20b03da6247eb1ba4a04c3bda7285c94&client_id=webconector1&client_secret=D2EBED43-3DAD-48E8-906A-1B2221C63062&es_md5=true";
       const token = await axios.post(
-        "https://auth.facturador.com/connect/token",
+        "https://authcli.stagefacturador.com/connect/token",
         grant
       );
       return token.data.access_token;
@@ -70,23 +70,31 @@ export const DataProvider = ({ children }) => {
     metodoPago,
     reiniciarFactura
   ) => {
-    const ultimaFactura = await axios.post('http://localhost:4000/api/ultimafactura');
+    const ultimaFactura = await axios.post(
+      "http://localhost:4000/api/ultimafactura"
+    );
     let folio = ultimaFactura.data[0].folio + 1;
-    const subTotalFactura = (total / 1.16).toFixed(2);
     const totalFactura = total.toFixed(2);
 
     let conceptos = [];
-    let subTotal = 0;
-    let impuestosTrasladados = (totalFactura - subTotalFactura).toFixed(2);
+    let impuestosTrasladados = new Decimal(0)
 
     elementos.map((elemento) => {
       let totalPartida =
         parseFloat(elemento.cantidad) * parseFloat(elemento.precio);
-      let precioSinImpuesto = (totalPartida / 1.16).toFixed(2);
-      let impuesto = (precioSinImpuesto * 1.16 - precioSinImpuesto).toFixed(2);
-      let precioUnitario = (elemento.precio / 1.16).toFixed(2);
-      subTotal = subTotal + impuesto;
-      //impuestosTrasladados = impuestosTrasladados + impuesto;
+      totalPartida = new Decimal(totalPartida);
+      let precioSinImpuesto = new Decimal(0)
+      precioSinImpuesto = totalPartida.dividedBy(1.16);
+      precioSinImpuesto = precioSinImpuesto.toFixed(2);
+      let impuesto = new Decimal(0);
+      impuesto = totalPartida.minus(totalPartida.dividedBy(1.16));
+      impuesto = impuesto.toFixed(2);
+      let precioUnitario = new Decimal(elemento.precio)
+      precioUnitario = precioUnitario.dividedBy(1.16)
+      precioUnitario = precioUnitario.toFixed(2)
+      impuestosTrasladados = new Decimal(impuestosTrasladados);
+      impuestosTrasladados = impuestosTrasladados.plus(impuesto);
+      impuestosTrasladados = impuestosTrasladados.toFixed(2);
 
       let data = {
         impuestos: {
@@ -123,57 +131,62 @@ export const DataProvider = ({ children }) => {
       conceptos.push(data);
     });
 
+
+    let subTotalFactura = new Decimal(total);
+    subTotalFactura = subTotalFactura.minus(new Decimal(impuestosTrasladados));
+    subTotalFactura = subTotalFactura.toFixed(2);
+
     let facturaProcesar = {
       emisor: {
-        rfc: "RULV690623SM4",
-        nombre: "VICTOR RUIZ LIMON",
+        rfc: "GOYA780416GM0",
+        nombre: "EMPRESA DE DEMOSTRACION S.A. DE C.V.",
         regimenFiscal: "612",
         descripcionFacturador:
           "Personas Físicas con Actividades Empresariales y Profesionales",
         sucursal: {
-          nombre: "ISLA",
+          nombre: "Atizapán",
           pais: "MEX",
-          estado: "Veracruz",
-          municipio: "Isla",
+          estado: "Edo. de México",
+          municipio: "Atizapán de Zaragoza",
           localidad: "",
-          colonia: "Centro",
-          calle: "Av 5 de Mayo",
-          noExterior: "79",
-          noInterior: "",
+          colonia: "México Nuevo",
+          calle: "Veracruz",
+          noExterior: "34",
+          noInterior: "20",
           referencia: "",
-          codigoPostal: "95641",
+          codigoPostal: "51907",
           descripcionColonia: "",
           descripcionLocalidad: "",
           descripcionMunicipio: "",
           descripcionEstado: "",
           descripcionPais: "",
-          correo: "ferreteriaruiz@hotmail.com",
+          correo: " contacto@facturador.com ",
         },
       },
       receptor: {
-        rfc: cliente.idCliente,
-        nombre: cliente.nombre,
-        usoCFDI: usoCFDI.id,
-        descripcionFacturador: usoCFDI.descripcion,
+        rfc: "XAXX010101000",
+        nombre: "EMPRESA DE PRUEBA TALLER 24",
+        usoCFDI: "G03",
+        descripcionFacturador: "Gastos en general",
         direccionIDFacturador: 0,
         direccion: {
-          nombre: "",
-          pais: "MEX",
-          estado: cliente.estado,
-          municipio: cliente.municipio,
-          localidad: cliente.localidad,
-          colonia: cliente.colonia,
-          calle: cliente.calle,
+          nombre: "Principal",
+          pais: "",
+          estado: "",
+          municipio: "",
+          localidad: "",
+          colonia: "",
+          calle: "",
           noExterior: "",
           noInterior: "",
           referencia: "",
-          codigoPostal: cliente.codigoPostal,
+          codigoPostal: "77500",
           descripcionColonia: "",
           descripcionLocalidad: "",
           descripcionMunicipio: "",
           descripcionEstado: "",
           descripcionPais: "",
-          correo: cliente.correo,
+          correo: "contacto@facturador.com",
         },
         descripcionResidenciaFiscal: "",
       },
@@ -226,8 +239,8 @@ export const DataProvider = ({ children }) => {
 
     try {
       const { data } = await axios.post(
-        "https://emision-api.facturador.com/api/v1/emisores/3280/comprobantes?emitir=true",
-        
+        "https://pruebas.stagefacturador.com/businessEmision/api/v1/emisores/208/comprobantes?emitir=true",
+
         facturaProcesar,
         {
           headers: headers,
@@ -235,48 +248,48 @@ export const DataProvider = ({ children }) => {
       );
 
       if (data.esValido) {
-        try {
-          const fechaCreacion = new Date();
+        console.log("Valido");
+        // try {
+        //   //const fechaCreacion = new Date();
 
-          const dd = fechaCreacion.getDate();
-          const mm = fechaCreacion.getMonth() + 1; //January is 0!
-          const yyyy = fechaCreacion.getFullYear();
+        //   // const dd = fechaCreacion.getDate();
+        //   // const mm = fechaCreacion.getMonth() + 1; //January is 0!
+        //   // const yyyy = fechaCreacion.getFullYear();
 
-          const today = mm + "/" + dd + "/" + yyyy;
-          await axios.post("http://localhost:4000/api/factura/insertar", {
-            folio,
-            rfc: cliente.idCliente,
-            fecha: today,
-            total: totalFactura,
-            subTotal: subTotalFactura,
-            uuid: data.uuid
-          });
-        } catch (error) {
-          setLoading(false);
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            html: "Error al en la isersion a la base de datos",
-            // footer: '<a href="">Why do I have this issue?</a>'
-          });
-        }
+        //  // const today = mm + "/" + dd + "/" + yyyy;
+        //   // await axios.post("http://localhost:4000/api/factura/insertar", {
+        //   //   folio,
+        //   //   rfc: cliente.idCliente,
+        //   //   fecha: today,
+        //   //   total: totalFactura,
+        //   //   subTotal: subTotalFactura,
+        //   //   uuid: data.uuid
+        //   // });
+        // } catch (error) {
+        //   setLoading(false);
+        //   Swal.fire({
+        //     icon: "error",
+        //     title: "Oops...",
+        //     html: "Error al en la isersion a la base de datos",
+        //     // footer: '<a href="">Why do I have this issue?</a>'
+        //   });
+        // }
         try {
           const pdfComprobante = await axios.get(
-            `https://emision-api.facturador.com/api/v1/emisores/3280/comprobantes/${data.uuid}/pdf`,
+            `https://pruebas.stagefacturador.com/businessEmision/api/v1/emisores/208/comprobantes/${data.uuid}/pdf`,
             {
               headers: headers,
             }
           );
           setLoading(false);
           window.open(pdfComprobante.data, data.uuid, "resizable");
-          reiniciarFactura();
+          //reiniciarFactura();
         } catch (error) {
           setLoading(false);
           Swal.fire({
             icon: "error",
             title: "Oops...",
             html: "Error al obtener el pdf",
-            // footer: '<a href="">Why do I have this issue?</a>'
           });
         }
       } else if (!data.esValido) {
@@ -292,7 +305,6 @@ export const DataProvider = ({ children }) => {
             icon: "error",
             title: "Oops...",
             html: mensajes,
-            // footer: '<a href="">Why do I have this issue?</a>'
           });
         } else {
           setLoading(false);
@@ -300,7 +312,6 @@ export const DataProvider = ({ children }) => {
             icon: "error",
             title: "Oops...",
             text: data,
-            // footer: '<a href="">Why do I have this issue?</a>'
           });
         }
       }
@@ -311,7 +322,6 @@ export const DataProvider = ({ children }) => {
         icon: "error",
         title: "Oops...",
         text: "Error al generar la factura, revisar que todos los datos esten correctos",
-        // footer: '<a href="">Why do I have this issue?</a>'
       });
     }
   };

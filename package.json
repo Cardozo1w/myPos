@@ -20,6 +20,7 @@
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.24.0",
     "date-fns": "^2.14.0",
+    "decimal.js-light": "^2.5.1",
     "electron-is-dev": "^2.0.0",
     "electron-pos-printer": "^1.2.0",
     "electron-printer": "^0.0.5",

@@ -4,6 +4,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 
 import Main from "../pages/main";
 import { DataProvider } from "../context/DataContext";
+import { FacturaProvider } from "../context/FacturaContext";
 
 const theme = createMuiTheme({
   palette: {
@@ -37,7 +38,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <DataProvider>
+        <FacturaProvider>
         <Main />
+        </FacturaProvider>
       </DataProvider>
     </ThemeProvider>
   );

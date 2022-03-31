@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   TableHead,
   TableRow,
@@ -8,6 +8,9 @@ import {
 import { PDFViewer } from "@react-pdf/renderer";
 import PageHeader from "../../components/PageHeader";
 import FormatListBulletedOutlinedIcon from "@material-ui/icons/FormatListBulletedOutlined";
+import { AiFillPrinter } from "react-icons/ai";
+import DescriptionIcon from "@material-ui/icons/Description";
+import { FacturaContext } from "../../context/FacturaContext";
 import {
   Paper,
   makeStyles,
@@ -45,9 +48,11 @@ const headCells = [
   { id: "cliente", label: "Cliente" },
   { id: "fecha", label: "Fecha" },
   { id: "total", label: "Total" },
+  {id: "acciones", label: "Acciones"}
 ];
 
-export default function ListadoCotizaciones() {
+export default function ListadoCotizaciones({setActive}) {
+  const { setProductosFactura } = useContext(FacturaContext);
   const [cotizaciones, setCotizaciones] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [order, setOrder] = useState();
@@ -121,13 +126,22 @@ export default function ListadoCotizaciones() {
     useForm(initialFValues, true, validate);
 
   const aplicarFiltro = async () => {
-    console.log("Fecha Inicial: " + values.fechaInicial);
-    console.log("Fecha Final: " + values.fechaFinal);
     const { data } = await axios.post("http://localhost:4000/api/cotizacion", {
       fechaInicial: values.fechaInicial,
       fechaFinal: values.fechaFinal,
     });
     setCotizaciones(data);
+  };
+
+
+  const crearFactura = async (folio, fecha, total) => {
+    const { data } = await axios.get(
+      `http://localhost:4000/api/cotizacion/${folio}`
+    );
+    console.log(data);
+    setProductosFactura(data.productos[0]);
+    setActive("facturacion")
+    
   };
 
   return (
@@ -207,14 +221,29 @@ export default function ListadoCotizaciones() {
               {cotizaciones.map((item) => (
                 <TableRow
                   key={item.folio}
-                  onClick={() => {
-                    obtenerCotizacion(item.folio, item.total, item.fecha);
-                  }}
                 >
                   <TableCell>{item.folio}</TableCell>
                   <TableCell>{item.idCliente}</TableCell>
                   <TableCell>{item.fecha.substring(0, 10)}</TableCell>
                   <TableCell>$ {item.total.toFixed(2)}</TableCell>
+                  <TableCell>
+                  <Controls.ActionButton
+                      color="primary"
+                      onClick={() => {
+                        obtenerCotizacion(item.folio, item.total, item.fecha);
+                      }}
+                    >
+                      <AiFillPrinter style={{ width: 20, height: 20 }} />
+                    </Controls.ActionButton>
+                  <Controls.ActionButton
+                      color="primary"
+                      onClick={() => {
+                        crearFactura(item.folio, item.fecha, item.total);
+                      }}
+                    >
+                      <DescriptionIcon style={{ width: 20, height: 20 }} />
+                    </Controls.ActionButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

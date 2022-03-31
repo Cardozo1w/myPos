@@ -9,6 +9,7 @@ import axios from "axios";
 import SaleTable from "./saleTable";
 import Products from "./Products";
 import { DataContext } from "../../context/DataContext";
+import { FacturaContext } from "../../context/FacturaContext";
 import DescriptionIcon from "@material-ui/icons/Description";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import FormaPagoComponent from "./catalogosSAT/formaPago";
@@ -35,11 +36,12 @@ const useStyles = makeStyles((theme) => ({
 export default function Facturacion() {
   const { generarToken, crearFactura, loading, setLoading } =
     useContext(DataContext);
+
+  const { productosFactura, setProductosFactura } = useContext(FacturaContext);
   const [abrirUsoCFDI, setAbrirUsoCFDI] = useState(false);
   const [abrirFormaPago, setAbrirFormaPago] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [openProducts, setOpenProducts] = useState(false);
-  const [folio, setFolio] = useState(null);
   const [abrirCotizacion, setAbrirCotizacion] = useState(false);
   const [productosVenta, setProductosVenta] = useState([]);
   const [cliente, setCliente] = useState({
@@ -60,12 +62,23 @@ export default function Facturacion() {
   const classes = useStyles();
 
   useEffect(() => {
+    const llenarArray = () => {
+      setProductosVenta(productosFactura);
+      setProductosFactura([])
+    };
+
+    llenarArray();
+  }, []);
+
+  useEffect(() => {
     let tot = 0;
     productosVenta.map((item) => {
       tot = tot + parseFloat(item.cantidad) * item.precio;
     });
 
     setTotal(tot);
+
+    console.log(productosVenta);
   }, [productosVenta]);
 
   let today = new Date();
@@ -84,7 +97,7 @@ export default function Facturacion() {
     setLoading(true);
     const reiniciarFactura = () => {
       window.location.reload();
-    }
+    };
     //Generar Token
     const token = await generarToken();
     crearFactura(
